@@ -7,14 +7,7 @@
   "background_color": "#f5f7fa",
   "theme_color": "#6a11cb",
   "orientation": "portrait",
-  "scope": "/expiry-calculator/",
   "icons": [
-    {
-      "src": "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/svgs/solid/calculator.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    },
     {
       "src": "https://img.icons8.com/color/192/000000/calculator--v1.png",
       "sizes": "192x192",
