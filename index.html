@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>到期日期计算器</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> 到期日期计算器</h1>
+            <p class="subtitle">轻松计算商品的到期日期和剩余天数</p>
+        </header>
+
+        <main>
+            <div class="calculator-card">
+                <div class="input-group">
+                    <label for="production-date">
+                        <i class="fas fa-calendar-plus"></i> 生产日期
+                    </label>
+                    <input type="date" id="production-date" value="">
+                    
+                    <label for="shelf-life">
+                        <i class="fas fa-clock"></i> 保质期（天数）
+                    </label>
+                    <div class="input-with-unit">
+                        <input type="number" id="shelf-life" value="365" min="1">
+                        <span class="unit">天</span>
+                    </div>
+                    
+                    <label for="current-date">
+                        <i class="fas fa-calendar-day"></i> 当前日期
+                    </label>
+                    <input type="date" id="current-date" value="">
+                </div>
+
+                <div class="button-group">
+                    <button id="calculate-btn" class="btn calculate">
+                        <i class="fas fa-calculator"></i> 计算到期日
+                    </button>
+                    <button id="reset-btn" class="btn reset">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                </div>
+
+                <div class="result-card">
+                    <h3><i class="fas fa-calendar-check"></i> 计算结果</h3>
+                    <div class="result-item">
+                        <span class="result-label">到期日期：</span>
+                        <span id="expiry-date" class="result-value">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">剩余天数：</span>
+                        <span id="days-left" class="result-value">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">状态：</span>
+                        <span id="status" class="result-value">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-card">
+                <h3><i class="fas fa-lightbulb"></i> 使用说明</h3>
+                <ul>
+                    <li>选择商品的生产日期</li>
+                    <li>输入保质期天数（如：365天=1年）</li>
+                    <li>选择当前日期（默认为今天）</li>
+                    <li>点击"计算到期日"查看结果</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2023 到期计算器 | 开源项目 | 
+                <a href="https://github.com/yourusername/expiry-calculator" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
