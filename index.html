@@ -22,96 +22,84 @@
     <link rel="manifest" href="manifest.json">
     
     <!-- 网站信息 -->
-    <meta name="description" content="快速计算商品到期日期">
+    <meta name="description" content="输入生产日期和保质期天数，精准计算到期日期">
     
     <title>到期计算器</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-calculator"></i> 到期日期计算</h1>
-            <p class="subtitle">选择生产日期和保质期，自动计算到期日</p>
+            <h1>到期日期计算器</h1>
+            <p class="subtitle">输入 → 计算 → 完成</p>
         </header>
 
         <main>
             <div class="calculator-card">
-                <!-- 生产日期选择 -->
-                <div class="input-section">
-                    <div class="section-title">
-                        <i class="fas fa-calendar-plus"></i> 1. 生产日期
+                <!-- 输入区域 -->
+                <div class="input-area">
+                    <div class="input-group">
+                        <label for="production-date">
+                            1. 生产日期
+                        </label>
+                        <input type="date" id="production-date" value="" class="date-input">
                     </div>
-                    <div class="date-input-container">
-                        <input type="date" id="production-date" value="">
+                    
+                    <div class="input-group">
+                        <label for="shelf-life">
+                            2. 保质期（天数）
+                        </label>
+                        <div class="number-input-container">
+                            <input type="number" id="shelf-life" value="365" min="1" max="9999" 
+                                   class="number-input" placeholder="输入天数">
+                            <span class="unit">天</span>
+                        </div>
+                        <div class="quick-tips">
+                            <span>常用：</span>
+                            <button type="button" class="quick-btn" data-days="30">30天</button>
+                            <button type="button" class="quick-btn" data-days="90">90天</button>
+                            <button type="button" class="quick-btn" data-days="180">半年</button>
+                            <button type="button" class="quick-btn" data-days="365">1年</button>
+                            <button type="button" class="quick-btn" data-days="730">2年</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 保质期滑轮选择器 -->
-                <div class="input-section">
-                    <div class="section-title">
-                        <i class="fas fa-clock"></i> 2. 保质期（滑动选择）
-                    </div>
-                    
-                    <div class="slider-wheel-container">
-                        <!-- 当前选中值显示 -->
-                        <div class="selected-display">
-                            <div class="selected-value" id="selected-days">365</div>
-                            <div class="unit-label">天</div>
-                        </div>
-                        
-                        <!-- iOS风格滑轮 -->
-                        <div class="ios-slider-wheel" id="ios-wheel">
-                            <div class="wheel-track">
-                                <div class="wheel-items" id="wheel-items">
-                                    <!-- 数字会通过JS动态生成 -->
-                                </div>
-                            </div>
-                            <div class="wheel-center-line"></div>
-                        </div>
-                        
-                        <!-- 刻度标签 -->
-                        <div class="scale-labels">
-                            <span>1天</span>
-                            <span>180天</span>
-                            <span>1年</span>
-                            <span>3年</span>
-                        </div>
-                    </div>
-                    
-                    <!-- 快捷按钮 -->
-                    <div class="quick-presets">
-                        <button type="button" class="preset-btn" data-days="30">30天</button>
-                        <button type="button" class="preset-btn" data-days="90">90天</button>
-                        <button type="button" class="preset-btn" data-days="180">半年</button>
-                        <button type="button" class="preset-btn" data-days="365">1年</button>
-                        <button type="button" class="preset-btn" data-days="730">2年</button>
-                    </div>
-                </div>
-
-                <!-- 隐藏的保质期输入 -->
-                <input type="hidden" id="shelf-life" value="365">
+                <!-- 计算按钮 -->
+                <button id="calculate-btn" class="calculate-btn">
+                    计算到期日期
+                </button>
 
                 <!-- 结果区域 -->
                 <div class="result-area">
-                    <div class="result-row">
-                        <span class="result-label">生产日期：</span>
-                        <span id="production-date-display" class="result-value">--</span>
+                    <h3>计算结果</h3>
+                    <div class="result-item">
+                        <span>生产日期：</span>
+                        <span id="production-date-display">--</span>
                     </div>
-                    <div class="result-row">
-                        <span class="result-label">保质期：</span>
-                        <span id="shelf-life-display" class="result-value">--</span>
+                    <div class="result-item">
+                        <span>保质期：</span>
+                        <span id="shelf-life-display">--</span>
                     </div>
-                    <div class="result-row highlight">
-                        <span class="result-label">到期日期：</span>
-                        <span id="expiry-date" class="result-value highlight">--</span>
+                    <div class="result-item highlight">
+                        <span>到期日期：</span>
+                        <span id="expiry-date" class="highlight">--</span>
                     </div>
                 </div>
+                
+                <!-- 错误提示区域 -->
+                <div id="error-message" class="error-message" style="display: none;"></div>
             </div>
 
-            <!-- 极简说明 -->
-            <div class="simple-tips">
-                <p><i class="fas fa-info-circle"></i> 提示：上下滑动选择保质期，修改自动计算</p>
+            <!-- 使用提示 -->
+            <div class="tips">
+                <p>💡 提示：</p>
+                <ul>
+                    <li>输入生产日期（默认30天前）</li>
+                    <li>输入保质期天数（支持小数）</li>
+                    <li>点击"计算到期日期"</li>
+                    <li>结果自动格式化显示</li>
+                </ul>
             </div>
         </main>
 
