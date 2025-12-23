@@ -32,61 +32,94 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-calculator"></i> 到期日期计算</h1>
-            <p class="subtitle">输入生产日期和保质期，自动计算到期日</p>
+            <p class="subtitle">选择生产日期和保质期，自动计算到期日</p>
         </header>
 
         <main>
             <div class="calculator-card">
-                <div class="input-group">
-                    <div class="input-row">
-                        <label for="production-date">
-                            <i class="fas fa-calendar-plus"></i> 生产日期
-                        </label>
+                <!-- 生产日期选择 -->
+                <div class="input-section">
+                    <div class="section-title">
+                        <i class="fas fa-calendar-plus"></i> 1. 选择生产日期
+                    </div>
+                    <div class="date-input-container">
                         <input type="date" id="production-date" value="">
                     </div>
+                </div>
+
+                <!-- 保质期滚轮选择 -->
+                <div class="input-section">
+                    <div class="section-title">
+                        <i class="fas fa-clock"></i> 2. 选择保质期
+                    </div>
                     
-                    <div class="input-row">
-                        <label for="shelf-life">
-                            <i class="fas fa-clock"></i> 保质期（天数）
-                        </label>
-                        <div class="input-with-unit">
-                            <input type="number" id="shelf-life" value="365" min="1">
+                    <div class="wheel-selector">
+                        <div class="wheel-display">
+                            <span id="shelf-life-value">365</span>
                             <span class="unit">天</span>
+                        </div>
+                        
+                        <div class="wheel-controls">
+                            <button class="wheel-btn minus" id="decrease-btn">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            
+                            <div class="wheel-options">
+                                <div class="preset-options">
+                                    <span class="preset-label">常用：</span>
+                                    <button type="button" class="preset-btn" data-days="30">30天</button>
+                                    <button type="button" class="preset-btn" data-days="90">90天</button>
+                                    <button type="button" class="preset-btn" data-days="180">半年</button>
+                                    <button type="button" class="preset-btn" data-days="365">1年</button>
+                                    <button type="button" class="preset-btn" data-days="730">2年</button>
+                                </div>
+                            </div>
+                            
+                            <button class="wheel-btn plus" id="increase-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="wheel-slider">
+                            <input type="range" id="shelf-life-slider" min="1" max="1095" value="365" step="1">
+                            <div class="slider-labels">
+                                <span>1天</span>
+                                <span>1年</span>
+                                <span>3年</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 快速选择按钮 -->
-                <div class="quick-buttons">
-                    <button type="button" class="quick-btn" data-days="30">30天</button>
-                    <button type="button" class="quick-btn" data-days="90">90天</button>
-                    <button type="button" class="quick-btn" data-days="180">半年</button>
-                    <button type="button" class="quick-btn" data-days="365">1年</button>
-                    <button type="button" class="quick-btn" data-days="730">2年</button>
-                </div>
+                <!-- 隐藏的保质期输入（用于计算） -->
+                <input type="hidden" id="shelf-life" value="365">
 
                 <div class="button-group">
                     <button id="calculate-btn" class="btn calculate">
-                        <i class="fas fa-calculator"></i> 立即计算
+                        <i class="fas fa-calculator"></i> 计算到期日
                     </button>
                 </div>
 
                 <div class="result-card">
                     <h3><i class="fas fa-calendar-check"></i> 计算结果</h3>
                     <div class="result-item">
-                        <span class="result-label">到期日期：</span>
-                        <span id="expiry-date" class="result-value">--</span>
+                        <span class="result-label">生产日期：</span>
+                        <span id="production-date-display" class="result-value">--</span>
                     </div>
                     <div class="result-item">
                         <span class="result-label">保质期：</span>
                         <span id="shelf-life-display" class="result-value">--</span>
+                    </div>
+                    <div class="result-item highlight">
+                        <span class="result-label">到期日期：</span>
+                        <span id="expiry-date" class="result-value highlight">--</span>
                     </div>
                 </div>
             </div>
 
             <!-- 极简说明 -->
             <div class="simple-tips">
-                <p><i class="fas fa-info-circle"></i> 提示：生产日期默认为30天前，可直接修改</p>
+                <p><i class="fas fa-info-circle"></i> 提示：修改日期或保质期会自动计算</p>
             </div>
         </main>
 
