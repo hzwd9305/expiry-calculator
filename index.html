@@ -18,14 +18,14 @@
     <!-- 启动画面 -->
     <link rel="apple-touch-startup-image" href="https://img.icons8.com/color/512/000000/calculator--v1.png">
     
-    <!-- Web App Manifest (最重要！你缺了这个) -->
+    <!-- Web App Manifest -->
     <link rel="manifest" href="manifest.json">
     
     <!-- 网站信息 -->
-    <meta name="description" content="快速计算商品到期日期和剩余天数">
-    <meta name="keywords" content="到期计算,保质期,日期计算,工具">
+    <meta name="description" content="快速计算商品到期日期和剩余天数（支持闰年计算）">
+    <meta name="keywords" content="到期计算,保质期,日期计算,闰年计算,工具">
     
-    <title>到期日期计算器</title>
+    <title>到期日期计算器（支持闰年）</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -33,7 +33,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-calculator"></i> 到期日期计算器</h1>
-            <p class="subtitle">轻松计算商品的到期日期和剩余天数</p>
+            <p class="subtitle">支持闰年计算的精确日期计算工具</p>
         </header>
 
         <main>
@@ -52,15 +52,32 @@
                         <span class="unit">天</span>
                     </div>
                     
+                    <!-- 快速选择按钮 -->
+                    <div class="quick-buttons">
+                        <p class="quick-title">快速选择：</p>
+                        <button type="button" class="quick-btn" data-days="365">1年</button>
+                        <button type="button" class="quick-btn" data-days="730">2年</button>
+                        <button type="button" class="quick-btn" data-days="1095">3年</button>
+                        <button type="button" class="quick-btn" data-days="180">半年</button>
+                    </div>
+                    
                     <label for="current-date">
                         <i class="fas fa-calendar-day"></i> 当前日期
                     </label>
                     <input type="date" id="current-date" value="">
+                    
+                    <!-- 闰年选项 -->
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="include-leap-year" checked>
+                        <label for="include-leap-year" class="checkbox-label">
+                            <i class="fas fa-calendar-alt"></i> 包含闰年天数（精确计算2月29日）
+                        </label>
+                    </div>
                 </div>
 
                 <div class="button-group">
                     <button id="calculate-btn" class="btn calculate">
-                        <i class="fas fa-calculator"></i> 计算到期日
+                        <i class="fas fa-calculator"></i> 精确计算
                     </button>
                     <button id="reset-btn" class="btn reset">
                         <i class="fas fa-redo"></i> 重置
@@ -81,6 +98,7 @@
                         <span class="result-label">状态：</span>
                         <span id="status" class="result-value">--</span>
                     </div>
+                    <!-- 闰年信息会动态添加到这里 -->
                 </div>
             </div>
 
@@ -88,15 +106,24 @@
                 <h3><i class="fas fa-lightbulb"></i> 使用说明</h3>
                 <ul>
                     <li>选择商品的生产日期</li>
-                    <li>输入保质期天数（如：365天=1年）</li>
+                    <li>输入保质期天数或使用快速按钮</li>
                     <li>选择当前日期（默认为今天）</li>
-                    <li>点击"计算到期日"查看结果</li>
+                    <li>勾选"包含闰年天数"进行精确计算</li>
+                    <li>点击"精确计算"查看结果</li>
                 </ul>
+                
+                <div class="leap-year-example">
+                    <h4><i class="fas fa-star"></i> 闰年计算示例：</h4>
+                    <p>生产日期：2020年2月27日</p>
+                    <p>保质期：2天</p>
+                    <p>包含闰年 → 到期日：<strong>2020年2月29日</strong>（闰日）</p>
+                    <p>不包含闰年 → 到期日：2020年2月28日</p>
+                </div>
             </div>
         </main>
 
         <footer>
-            <p>© 2023 到期计算器 | 开源项目 | 
+            <p>© 2023 到期计算器 | 支持闰年计算 | 
                 <a href="https://github.com/hzwd9305/expiry-calculator" target="_blank">
                     <i class="fab fa-github"></i> GitHub
                 </a>
