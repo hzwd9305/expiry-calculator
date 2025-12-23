@@ -22,65 +22,52 @@
     <link rel="manifest" href="manifest.json">
     
     <!-- 网站信息 -->
-    <meta name="description" content="快速计算商品到期日期和剩余天数（支持闰年计算）">
-    <meta name="keywords" content="到期计算,保质期,日期计算,闰年计算,工具">
+    <meta name="description" content="快速计算商品到期日期">
     
-    <title>到期日期计算器（支持闰年）</title>
+    <title>到期计算器</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-calculator"></i> 到期日期计算器</h1>
-            <p class="subtitle">支持闰年计算的精确日期计算工具</p>
+            <h1><i class="fas fa-calculator"></i> 到期日期计算</h1>
+            <p class="subtitle">输入生产日期和保质期，自动计算到期日</p>
         </header>
 
         <main>
             <div class="calculator-card">
                 <div class="input-group">
-                    <label for="production-date">
-                        <i class="fas fa-calendar-plus"></i> 生产日期
-                    </label>
-                    <input type="date" id="production-date" value="">
-                    
-                    <label for="shelf-life">
-                        <i class="fas fa-clock"></i> 保质期（天数）
-                    </label>
-                    <div class="input-with-unit">
-                        <input type="number" id="shelf-life" value="365" min="1">
-                        <span class="unit">天</span>
-                    </div>
-                    
-                    <!-- 快速选择按钮 -->
-                    <div class="quick-buttons">
-                        <p class="quick-title">快速选择：</p>
-                        <button type="button" class="quick-btn" data-days="365">1年</button>
-                        <button type="button" class="quick-btn" data-days="730">2年</button>
-                        <button type="button" class="quick-btn" data-days="1095">3年</button>
-                        <button type="button" class="quick-btn" data-days="180">半年</button>
-                    </div>
-                    
-                    <label for="current-date">
-                        <i class="fas fa-calendar-day"></i> 当前日期
-                    </label>
-                    <input type="date" id="current-date" value="">
-                    
-                    <!-- 闰年选项 -->
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="include-leap-year" checked>
-                        <label for="include-leap-year" class="checkbox-label">
-                            <i class="fas fa-calendar-alt"></i> 包含闰年天数（精确计算2月29日）
+                    <div class="input-row">
+                        <label for="production-date">
+                            <i class="fas fa-calendar-plus"></i> 生产日期
                         </label>
+                        <input type="date" id="production-date" value="">
                     </div>
+                    
+                    <div class="input-row">
+                        <label for="shelf-life">
+                            <i class="fas fa-clock"></i> 保质期（天数）
+                        </label>
+                        <div class="input-with-unit">
+                            <input type="number" id="shelf-life" value="365" min="1">
+                            <span class="unit">天</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快速选择按钮 -->
+                <div class="quick-buttons">
+                    <button type="button" class="quick-btn" data-days="30">30天</button>
+                    <button type="button" class="quick-btn" data-days="90">90天</button>
+                    <button type="button" class="quick-btn" data-days="180">半年</button>
+                    <button type="button" class="quick-btn" data-days="365">1年</button>
+                    <button type="button" class="quick-btn" data-days="730">2年</button>
                 </div>
 
                 <div class="button-group">
                     <button id="calculate-btn" class="btn calculate">
-                        <i class="fas fa-calculator"></i> 精确计算
-                    </button>
-                    <button id="reset-btn" class="btn reset">
-                        <i class="fas fa-redo"></i> 重置
+                        <i class="fas fa-calculator"></i> 立即计算
                     </button>
                 </div>
 
@@ -91,43 +78,20 @@
                         <span id="expiry-date" class="result-value">--</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">剩余天数：</span>
-                        <span id="days-left" class="result-value">--</span>
+                        <span class="result-label">保质期：</span>
+                        <span id="shelf-life-display" class="result-value">--</span>
                     </div>
-                    <div class="result-item">
-                        <span class="result-label">状态：</span>
-                        <span id="status" class="result-value">--</span>
-                    </div>
-                    <!-- 闰年信息会动态添加到这里 -->
                 </div>
             </div>
 
-            <div class="tips-card">
-                <h3><i class="fas fa-lightbulb"></i> 使用说明</h3>
-                <ul>
-                    <li>选择商品的生产日期</li>
-                    <li>输入保质期天数或使用快速按钮</li>
-                    <li>选择当前日期（默认为今天）</li>
-                    <li>勾选"包含闰年天数"进行精确计算</li>
-                    <li>点击"精确计算"查看结果</li>
-                </ul>
-                
-                <div class="leap-year-example">
-                    <h4><i class="fas fa-star"></i> 闰年计算示例：</h4>
-                    <p>生产日期：2020年2月27日</p>
-                    <p>保质期：2天</p>
-                    <p>包含闰年 → 到期日：<strong>2020年2月29日</strong>（闰日）</p>
-                    <p>不包含闰年 → 到期日：2020年2月28日</p>
-                </div>
+            <!-- 极简说明 -->
+            <div class="simple-tips">
+                <p><i class="fas fa-info-circle"></i> 提示：生产日期默认为30天前，可直接修改</p>
             </div>
         </main>
 
         <footer>
-            <p>© 2023 到期计算器 | 支持闰年计算 | 
-                <a href="https://github.com/hzwd9305/expiry-calculator" target="_blank">
-                    <i class="fab fa-github"></i> GitHub
-                </a>
-            </p>
+            <p>© 到期计算器 | <span id="current-year"></span></p>
         </footer>
     </div>
 
