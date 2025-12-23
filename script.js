@@ -1,4 +1,4 @@
-// 初始化日期输入为今天
+// 初始化日期输入
 function initializeDates() {
     const today = new Date();
     const formattedToday = today.toISOString().split('T')[0];
@@ -12,14 +12,11 @@ function initializeDates() {
     updateProductionDateDisplay(formattedProduction);
 }
 
-// 格式化日期显示（修复乱码）
+// 格式化日期显示
 function formatDateForDisplay(dateStr) {
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) {
-        return '日期格式错误';
-    }
+    if (isNaN(date.getTime())) return '日期错误';
     
-    // 使用本地化格式，避免乱码
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
@@ -29,13 +26,13 @@ function formatDateForDisplay(dateStr) {
 
 // 更新生产日期显示
 function updateProductionDateDisplay(dateStr) {
-    const displayStr = formatDateForDisplay(dateStr);
-    document.getElementById('production-date-display').textContent = displayStr;
+    document.getElementById('production-date-display').textContent = formatDateForDisplay(dateStr);
 }
 
 // 更新保质期显示
 function updateShelfLifeDisplay(days) {
-    document.getElementById('shelf-life-value').textContent = days;
+    // 更新显示值
+    document.getElementById('selected-days').textContent = days;
     document.getElementById('shelf-life').value = days;
     
     // 格式化保质期显示
@@ -51,6 +48,68 @@ function updateShelfLifeDisplay(days) {
     }
     
     document.getElementById('shelf-life-display').textContent = displayText;
+    
+    // 更新滑轮位置
+    updateWheelPosition(days);
+}
+
+// 生成滑轮数字项
+function generateWheelItems() {
+    const wheelItems = document.getElementById('wheel-items');
+    wheelItems.innerHTML = '';
+    
+    // 生成1-1095天的选项（间隔5天）
+    for (let i = 1; i <= 1095; i += 5) {
+        const item = document.createElement('div');
+        item.className = 'wheel-item';
+        item.textContent = i;
+        item.setAttribute('data-days', i);
+        wheelItems.appendChild(item);
+    }
+    
+    // 最后确保有1095这个选项
+    const lastItem = document.createElement('div');
+    lastItem.className = 'wheel-item';
+    lastItem.textContent = '1095';
+    lastItem.setAttribute('data-days', 1095);
+    wheelItems.appendChild(lastItem);
+}
+
+// 更新滑轮位置
+function updateWheelPosition(days) {
+    const wheelItems = document.querySelectorAll('.wheel-item');
+    
+    // 移除之前的选中状态
+    wheelItems.forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    // 找到最接近的选项
+    let closestItem = null;
+    let minDiff = Infinity;
+    
+    wheelItems.forEach(item => {
+        const itemDays = parseInt(item.getAttribute('data-days'));
+        const diff = Math.abs(itemDays - days);
+        
+        if (diff < minDiff) {
+            minDiff = diff;
+            closestItem = item;
+        }
+    });
+    
+    // 设置选中状态
+    if (closestItem) {
+        closestItem.classList.add('selected');
+        
+        // 滚动到选中项
+        const wheelContainer = document.getElementById('wheel-items');
+        const itemHeight = 60; // 每个选项高度
+        const selectedIndex = Array.from(wheelItems).indexOf(closestItem);
+        const targetPosition = -selectedIndex * itemHeight + 125; // 125是中间位置偏移
+        
+        wheelContainer.style.transform = `translateY(${targetPosition}px)`;
+    }
 }
 
 // 计算到期日期
@@ -58,13 +117,7 @@ function calculateExpiry() {
     const productionDateStr = document.getElementById('production-date').value;
     const shelfLife = parseInt(document.getElementById('shelf-life').value);
     
-    if (!productionDateStr) {
-        return;
-    }
-    
-    if (shelfLife <= 0) {
-        return;
-    }
+    if (!productionDateStr || shelfLife <= 0) return;
     
     // 计算到期日期
     const productionDate = new Date(productionDateStr);
@@ -73,49 +126,153 @@ function calculateExpiry() {
     
     // 更新显示
     updateProductionDateDisplay(productionDateStr);
-    updateShelfLifeDisplay(shelfLife);
     
     // 格式化到期日期显示
     const expiryStr = formatDateForDisplay(expiryDate.toISOString().split('T')[0]);
     document.getElementById('expiry-date').textContent = expiryStr;
 }
 
-// 滚轮控制
-function setupWheelControls() {
-    const slider = document.getElementById('shelf-life-slider');
-    const decreaseBtn = document.getElementById('decrease-btn');
-    const increaseBtn = document.getElementById('increase-btn');
+// 初始化滑轮交互
+function initWheelInteraction() {
+    const wheelContainer = document.getElementById('ios-wheel');
+    const wheelItems = document.getElementById('wheel-items');
+    let isDragging = false;
+    let startY = 0;
+    let currentY = 0;
+    let currentPosition = 0;
+    const itemHeight = 60;
     
-    // 滑块变化
-    slider.addEventListener('input', function() {
-        const days = parseInt(this.value);
-        updateShelfLifeDisplay(days);
+    // 初始位置（365天在中间）
+    currentPosition = -Math.floor(365 / 5) * itemHeight + 125;
+    wheelItems.style.transform = `translateY(${currentPosition}px)`;
+    
+    // 触摸开始
+    wheelContainer.addEventListener('touchstart', function(e) {
+        isDragging = true;
+        startY = e.touches[0].clientY;
+        wheelItems.style.transition = 'none';
+    });
+    
+    // 触摸移动
+    wheelContainer.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        
+        currentY = e.touches[0].clientY;
+        const deltaY = currentY - startY;
+        
+        // 限制滑动范围
+        const maxPosition = 125;
+        const minPosition = -((1095 / 5) * itemHeight) + 125;
+        const newPosition = currentPosition + deltaY;
+        
+        if (newPosition > maxPosition) {
+            currentPosition = maxPosition;
+        } else if (newPosition < minPosition) {
+            currentPosition = minPosition;
+        } else {
+            currentPosition = newPosition;
+        }
+        
+        wheelItems.style.transform = `translateY(${currentPosition}px)`;
+        startY = currentY;
+        
+        // 实时更新选中值
+        updateSelectedValueFromPosition();
+    });
+    
+    // 触摸结束
+    wheelContainer.addEventListener('touchend', function() {
+        if (!isDragging) return;
+        isDragging = false;
+        wheelItems.style.transition = 'transform 0.3s ease-out';
+        
+        // 吸附到最近的选项
+        snapToNearestItem();
         calculateExpiry();
     });
     
-    // 减少按钮
-    decreaseBtn.addEventListener('click', function() {
-        let days = parseInt(document.getElementById('shelf-life').value);
-        days = Math.max(1, days - 1);
-        slider.value = days;
-        updateShelfLifeDisplay(days);
+    // 鼠标事件（桌面支持）
+    wheelContainer.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        startY = e.clientY;
+        wheelItems.style.transition = 'none';
+        e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        
+        currentY = e.clientY;
+        const deltaY = currentY - startY;
+        
+        const maxPosition = 125;
+        const minPosition = -((1095 / 5) * itemHeight) + 125;
+        const newPosition = currentPosition + deltaY;
+        
+        if (newPosition > maxPosition) {
+            currentPosition = maxPosition;
+        } else if (newPosition < minPosition) {
+            currentPosition = minPosition;
+        } else {
+            currentPosition = newPosition;
+        }
+        
+        wheelItems.style.transform = `translateY(${currentPosition}px)`;
+        startY = currentY;
+        
+        updateSelectedValueFromPosition();
+    });
+    
+    document.addEventListener('mouseup', function() {
+        if (!isDragging) return;
+        isDragging = false;
+        wheelItems.style.transition = 'transform 0.3s ease-out';
+        snapToNearestItem();
         calculateExpiry();
     });
     
-    // 增加按钮
-    increaseBtn.addEventListener('click', function() {
-        let days = parseInt(document.getElementById('shelf-life').value);
-        days = Math.min(1095, days + 1);
-        slider.value = days;
-        updateShelfLifeDisplay(days);
-        calculateExpiry();
-    });
+    // 根据位置更新选中值
+    function updateSelectedValueFromPosition() {
+        const items = document.querySelectorAll('.wheel-item');
+        const centerIndex = Math.round((-currentPosition + 125) / itemHeight);
+        
+        if (items[centerIndex]) {
+            const days = parseInt(items[centerIndex].getAttribute('data-days'));
+            updateShelfLifeDisplay(days);
+        }
+    }
     
-    // 预设按钮
+    // 吸附到最近的选项
+    function snapToNearestItem() {
+        const items = document.querySelectorAll('.wheel-item');
+        const centerIndex = Math.round((-currentPosition + 125) / itemHeight);
+        
+        if (items[centerIndex]) {
+            const targetIndex = Math.max(0, Math.min(items.length - 1, centerIndex));
+            const days = parseInt(items[targetIndex].getAttribute('data-days'));
+            
+            currentPosition = -targetIndex * itemHeight + 125;
+            wheelItems.style.transform = `translateY(${currentPosition}px)`;
+            updateShelfLifeDisplay(days);
+        }
+    }
+    
+    // 点击选项直接选择
+    wheelItems.addEventListener('click', function(e) {
+        if (e.target.classList.contains('wheel-item')) {
+            const days = parseInt(e.target.getAttribute('data-days'));
+            updateShelfLifeDisplay(days);
+            calculateExpiry();
+        }
+    });
+}
+
+// 设置快捷按钮
+function setupPresetButtons() {
     document.querySelectorAll('.preset-btn').forEach(button => {
         button.addEventListener('click', function() {
             const days = parseInt(this.getAttribute('data-days'));
-            slider.value = days;
             updateShelfLifeDisplay(days);
             calculateExpiry();
         });
@@ -133,12 +290,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化
     initializeDates();
     setCurrentYear();
+    generateWheelItems();
+    updateWheelPosition(365);
     
-    // 设置滚轮控制
-    setupWheelControls();
-    
-    // 计算按钮
-    document.getElementById('calculate-btn').addEventListener('click', calculateExpiry);
+    // 设置交互
+    initWheelInteraction();
+    setupPresetButtons();
     
     // 日期变化自动计算
     document.getElementById('production-date').addEventListener('change', function() {
@@ -149,36 +306,21 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(calculateExpiry, 100);
 });
 
-// 添加快捷键支持
+// 键盘快捷键
 document.addEventListener('keydown', function(e) {
-    // 上下箭头控制保质期
+    const currentDays = parseInt(document.getElementById('shelf-life').value);
+    
     if (e.key === 'ArrowUp') {
         e.preventDefault();
-        let days = parseInt(document.getElementById('shelf-life').value);
-        days = Math.min(1095, days + 1);
-        document.getElementById('shelf-life-slider').value = days;
-        updateShelfLifeDisplay(days);
+        const newDays = Math.min(1095, currentDays + 5);
+        updateShelfLifeDisplay(newDays);
         calculateExpiry();
     }
     
     if (e.key === 'ArrowDown') {
         e.preventDefault();
-        let days = parseInt(document.getElementById('shelf-life').value);
-        days = Math.max(1, days - 1);
-        document.getElementById('shelf-life-slider').value = days;
-        updateShelfLifeDisplay(days);
+        const newDays = Math.max(1, currentDays - 5);
+        updateShelfLifeDisplay(newDays);
         calculateExpiry();
-    }
-    
-    // 数字键快速选择
-    if (e.key >= '1' && e.key <= '5') {
-        e.preventDefault();
-        const daysMap = { '1': 30, '2': 90, '3': 180, '4': 365, '5': 730 };
-        const days = daysMap[e.key];
-        if (days) {
-            document.getElementById('shelf-life-slider').value = days;
-            updateShelfLifeDisplay(days);
-            calculateExpiry();
-        }
     }
 });
