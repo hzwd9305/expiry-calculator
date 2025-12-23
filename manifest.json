@@ -1,22 +1,40 @@
 {
-  "name": "到期计算器",
+  "name": "到期计算器（支持闰年）",
   "short_name": "到期计算",
-  "description": "快速计算商品到期日期和剩余天数",
+  "description": "精确计算商品到期日期和剩余天数，支持闰年计算",
   "start_url": "/expiry-calculator/",
   "display": "standalone",
   "background_color": "#f5f7fa",
   "theme_color": "#6a11cb",
   "orientation": "portrait",
+  "scope": "/expiry-calculator/",
   "icons": [
+    {
+      "src": "https://img.icons8.com/color/96/000000/calculator--v1.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://img.icons8.com/color/144/000000/calculator--v1.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "https://img.icons8.com/color/192/000000/calculator--v1.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "https://img.icons8.com/color/512/000000/calculator--v1.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["utilities", "productivity"],
+  "lang": "zh-CN",
+  "dir": "ltr"
 }
