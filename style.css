@@ -90,6 +90,67 @@ input[type="date"]:focus, input[type="number"]:focus {
     font-weight: 500;
 }
 
+/* 复选框样式 */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    margin-top: 5px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #6a11cb;
+}
+
+.checkbox-label {
+    font-weight: normal;
+    cursor: pointer;
+    color: #555;
+    font-size: 1rem;
+}
+
+/* 快速按钮样式 */
+.quick-buttons {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.quick-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #444;
+    font-size: 1rem;
+}
+
+.quick-btn {
+    padding: 10px 18px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background: #e9ecef;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.quick-btn:hover {
+    background: #6a11cb;
+    color: white;
+    border-color: #6a11cb;
+    transform: translateY(-2px);
+}
+
+.quick-btn:active {
+    transform: translateY(0);
+}
+
 /* 按钮样式 */
 .button-group {
     display: flex;
@@ -174,6 +235,23 @@ input[type="date"]:focus, input[type="number"]:focus {
     font-weight: 600;
 }
 
+/* 闰年特殊提示 */
+.leap-year-note {
+    background: #e7f3ff;
+    border-left: 4px solid #2575fc;
+    padding: 12px 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #2c5282;
+    line-height: 1.5;
+}
+
+.leap-year-note i {
+    color: #2575fc;
+    margin-right: 8px;
+}
+
 /* 提示卡片 */
 .tips-card {
     background: white;
@@ -191,6 +269,7 @@ input[type="date"]:focus, input[type="number"]:focus {
 .tips-card ul {
     list-style: none;
     padding-left: 10px;
+    margin-bottom: 25px;
 }
 
 .tips-card li {
@@ -206,6 +285,31 @@ input[type="date"]:focus, input[type="number"]:focus {
     left: 0;
     color: #6a11cb;
     font-weight: bold;
+}
+
+/* 闰年示例 */
+.leap-year-example {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    border: 1px dashed #dee2e6;
+}
+
+.leap-year-example h4 {
+    color: #444;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.leap-year-example p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.leap-year-example strong {
+    color: #2575fc;
 }
 
 /* 页脚 */
@@ -254,5 +358,12 @@ footer a:hover {
     
     .result-value {
         align-self: flex-end;
+    }
+    
+    .quick-btn {
+        padding: 8px 14px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
     }
 }
