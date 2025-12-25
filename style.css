@@ -1,399 +1,843 @@
-/* ========== 重置与全局 ========== */
-* {
+/* ========== CSS重置（全浏览器兼容） ========== */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-text-size-adjust: 100%; /* 禁止字体缩放 */
-    -moz-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
 }
 
 html {
     font-size: 16px;
     height: 100%;
-    -webkit-overflow-scrolling: touch; /* 平滑滚动 */
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    font-synthesis: none;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
-    background: #f5f7fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
     min-height: 100vh;
-    min-height: -webkit-fill-available; /* 适配iOS Safari */
-    padding: 5vw; /* 使用视口单位适配 */
-    color: #333;
+    color: #2d3748;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
+    padding: 20px;
     overflow-x: hidden;
 }
 
-/* 容器适配 */
+/* ========== 容器系统 ========== */
 .container {
     width: 100%;
-    max-width: 500px;
+    max-width: 1200px;
     margin: 0 auto;
-    flex: 0 1 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* ========== 头部 ========== */
+/* ========== 头部样式 ========== */
 header {
     text-align: center;
-    margin-bottom: 6vw;
-    padding: 4vw 0;
+    margin-bottom: 40px;
+    padding: 30px 20px;
+    width: 100%;
+    max-width: 800px;
 }
 
 header h1 {
-    font-size: clamp(1.5rem, 6vw, 1.8rem); /* 响应式字体 */
-    margin-bottom: 2vw;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
     color: #2c3e50;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: -0.5px;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 header .subtitle {
-    font-size: clamp(0.9rem, 4vw, 1rem);
-    color: #7f8c8d;
+    font-size: 1.2rem;
+    color: #4a5568;
+    margin-bottom: 10px;
+    font-weight: 500;
 }
 
-/* ========== 计算器卡片 ========== */
+.platform-hint {
+    font-size: 0.95rem;
+    color: #718096;
+    background: rgba(106, 17, 203, 0.05);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* ========== 计算器卡片（自适应核心） ========== */
 .calculator-card {
     background: white;
-    border-radius: 4vw;
-    padding: 6vw;
-    margin-bottom: 6vw;
-    box-shadow: 0 2vw 8vw rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
     width: 100%;
+    max-width: 800px;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.calculator-card:hover {
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
 }
 
 /* ========== 输入区域 ========== */
 .input-area {
-    margin-bottom: 6vw;
+    margin-bottom: 40px;
 }
 
 .input-group {
-    margin-bottom: 6vw;
+    margin-bottom: 35px;
+    width: 100%;
 }
 
 .input-group label {
-    display: block;
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 3vw;
-    font-size: clamp(1rem, 4.5vw, 1.1rem);
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 15px;
+    font-size: 1.15rem;
+    gap: 12px;
 }
 
-/* 日期和数字输入框 - 全设备优化 */
-.date-input, .number-input {
+.label-icon {
+    font-size: 1.3rem;
+    opacity: 0.8;
+}
+
+/* 日期输入框（全平台优化） */
+.date-input {
     width: 100%;
-    padding: 4vw;
-    border: 0.5vw solid #e0e0e0;
-    border-radius: 3vw;
-    font-size: clamp(1rem, 4.5vw, 1.1rem);
-    transition: all 0.3s;
+    padding: 18px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    font-size: 1.1rem;
     font-family: inherit;
     background: #fff;
-    -webkit-appearance: none;
+    color: #2d3748;
+    transition: all 0.3s;
+    cursor: pointer;
     appearance: none;
-    min-height: 14vw; /* 确保触摸区域足够大 */
-}
-
-/* 优化iOS输入体验 */
-.date-input::-webkit-date-and-time-value {
-    text-align: left;
-    margin-left: 0;
-}
-.date-input::-webkit-calendar-picker-indicator {
-    transform: scale(1.3);
-    margin-right: 2vw;
-}
-
-.number-input::-webkit-outer-spin-button,
-.number-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    margin: 0;
 }
 
-.date-input:focus, .number-input:focus {
+.date-input:hover {
+    border-color: #a0aec0;
+}
+
+.date-input:focus {
     border-color: #6a11cb;
-    box-shadow: 0 0 0 1.5vw rgba(106, 17, 203, 0.1);
+    box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15);
     outline: none;
 }
 
-/* 数字输入容器 */
+/* 数字输入框 */
 .number-input-container {
     position: relative;
     width: 100%;
 }
 
-.number-input-container .unit {
-    position: absolute;
-    right: 4vw;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-    font-weight: 500;
-    font-size: clamp(1rem, 4.5vw, 1.1rem);
+.number-input {
+    width: 100%;
+    padding: 18px 60px 18px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-family: inherit;
+    background: #fff;
+    color: #2d3748;
+    transition: all 0.3s;
 }
 
-/* ========== 快捷按钮 ========== */
+.number-input:hover {
+    border-color: #a0aec0;
+}
+
+.number-input:focus {
+    border-color: #6a11cb;
+    box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15);
+    outline: none;
+}
+
+.number-input-container .unit {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #718096;
+    font-weight: 600;
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.input-hint {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-top: 8px;
+    margin-left: 5px;
+}
+
+/* ========== 快捷按钮（自适应布局） ========== */
 .quick-tips {
-    margin-top: 4vw;
+    margin-top: 20px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 2.5vw;
+    gap: 12px;
 }
 
-.quick-tips span {
-    color: #666;
-    font-size: clamp(0.85rem, 3.8vw, 0.95rem);
+.tips-title {
+    color: #4a5568;
+    font-size: 1rem;
+    font-weight: 600;
     white-space: nowrap;
 }
 
 .quick-btn {
-    padding: 3vw 5vw;
-    background: #f0f2f5;
-    border: 0.3vw solid #d1d5da;
-    border-radius: 2.5vw;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+    border: 2px solid #cbd5e0;
+    border-radius: 12px;
     cursor: pointer;
-    font-size: clamp(0.8rem, 3.8vw, 0.9rem);
-    color: #444;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
     transition: all 0.2s;
     flex: 1;
-    min-width: 0;
+    min-width: 80px;
     text-align: center;
     white-space: nowrap;
-    touch-action: manipulation; /* 优化触摸响应 */
 }
 
-.quick-btn:active, .quick-btn:hover {
-    background: #6a11cb;
+.quick-btn:hover {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     color: white;
     border-color: #6a11cb;
-    transform: translateY(-0.5vw);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
+}
+
+.quick-btn:active {
+    transform: translateY(0);
 }
 
 /* ========== 计算按钮 ========== */
 .calculate-btn {
     width: 100%;
-    padding: 5vw;
+    padding: 22px;
     background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     color: white;
     border: none;
-    border-radius: 3vw;
-    font-size: clamp(1rem, 4.5vw, 1.1rem);
+    border-radius: 16px;
+    font-size: 1.3rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s;
-    margin-bottom: 6vw;
-    touch-action: manipulation;
-    min-height: 16vw;
+    margin-bottom: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 15px;
+    letter-spacing: 0.5px;
+}
+
+.calculate-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(106, 17, 203, 0.4);
 }
 
 .calculate-btn:active {
-    transform: scale(0.98);
-    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-icon {
+    font-size: 1.5rem;
 }
 
 /* ========== 结果区域 ========== */
 .result-area {
-    background: #f8f9fa;
-    border-radius: 4vw;
-    padding: 5vw;
-    border-left: 1.5vw solid #6a11cb;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 20px;
+    padding: 35px;
+    border-left: 8px solid #6a11cb;
     width: 100%;
+    margin-top: 20px;
 }
 
 .result-area h3 {
-    margin-bottom: 5vw;
-    color: #444;
-    font-size: clamp(1.1rem, 5vw, 1.3rem);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    color: #2d3748;
+    font-size: 1.5rem;
     font-weight: 700;
+}
+
+.result-icon {
+    font-size: 1.8rem;
 }
 
 .result-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 3.5vw 0;
-    border-bottom: 0.3vw solid #e9ecef;
-    flex-wrap: wrap;
+    padding: 18px 0;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .result-item:last-child {
     border-bottom: none;
 }
 
-.result-item span:first-child {
+.result-label {
     font-weight: 600;
-    color: #555;
-    font-size: clamp(0.95rem, 4.2vw, 1.05rem);
+    color: #4a5568;
+    font-size: 1.1rem;
     flex: 1;
-    min-width: 50%;
 }
 
-.result-item span:last-child {
-    font-size: clamp(0.95rem, 4.2vw, 1.05rem);
+.result-value {
+    font-size: 1.1rem;
     text-align: right;
     flex: 1;
-    min-width: 50%;
+    font-weight: 500;
+    color: #2d3748;
     word-break: break-word;
+    padding-left: 20px;
 }
 
-/* 到期日期高亮样式 */
+/* 高亮样式 */
 .result-item.highlight {
-    background: rgba(106, 17, 203, 0.05);
-    margin: 0 -5vw;
-    padding: 4vw 5vw;
-    border-radius: 3vw;
+    background: rgba(106, 17, 203, 0.08);
+    margin: 0 -35px;
+    padding: 20px 35px;
+    border-radius: 16px;
+    border-left: 4px solid #6a11cb;
 }
 
-.result-item .highlight {
+.result-value.highlight {
     color: #6a11cb;
     font-weight: 800;
-    font-size: clamp(1.1rem, 5vw, 1.3rem);
+    font-size: 1.4rem;
 }
 
-/* 提醒日期样式 */
+/* 贴签日期样式 */
 .result-item.reminder {
-    background: rgba(37, 117, 252, 0.05);
-    margin: 0 -5vw;
-    padding: 4vw 5vw;
-    border-radius: 3vw;
-    border-left: 1vw solid #2575fc;
+    background: rgba(37, 117, 252, 0.08);
+    margin: 0 -35px;
+    padding: 20px 35px;
+    border-radius: 16px;
+    border-left: 4px solid #2575fc;
 }
 
-.result-item .reminder {
+.result-value.reminder {
     color: #2575fc;
+    font-weight: 800;
+    font-size: 1.4rem;
+}
+
+/* ========== PC端提示 ========== */
+.pc-hints {
+    background: rgba(160, 174, 192, 0.1);
+    border-radius: 16px;
+    padding: 25px;
+    margin-top: 35px;
+    border: 1px solid #e2e8f0;
+}
+
+.pc-hints p {
     font-weight: 700;
-    font-size: clamp(1.05rem, 4.8vw, 1.25rem);
+    color: #4a5568;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.pc-hints ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.pc-hints li {
+    padding: 8px 0;
+    color: #718096;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pc-hints kbd {
+    background: #2d3748;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    min-width: 28px;
+    text-align: center;
 }
 
 /* ========== 错误提示 ========== */
 .error-message {
-    background: #fee;
-    border: 0.3vw solid #fcc;
-    border-radius: 3vw;
-    padding: 4vw;
-    margin-top: 5vw;
-    color: #c00;
-    font-size: clamp(0.85rem, 3.8vw, 0.95rem);
+    background: #fed7d7;
+    border: 2px solid #fc8181;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 30px;
+    color: #c53030;
+    font-size: 1rem;
+    font-weight: 600;
     display: none;
     width: 100%;
 }
 
 .error-message.show {
     display: block;
-    animation: fadeIn 0.3s;
+    animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* ========== 提示区域 ========== */
+/* ========== 使用提示区域 ========== */
 .tips {
-    background: #e7f3ff;
-    border-radius: 4vw;
-    padding: 5vw;
-    border: 0.3vw solid #c3d9ff;
+    background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+    border-radius: 20px;
+    padding: 35px;
+    border: 2px solid #90cdf4;
     width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
 }
 
 .tips p {
-    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
     color: #2c5282;
-    margin-bottom: 3vw;
-    font-size: clamp(0.95rem, 4.2vw, 1.05rem);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.tip-icon {
+    font-size: 1.8rem;
 }
 
 .tips ul {
     list-style: none;
-    padding-left: 2vw;
+    padding-left: 0;
 }
 
 .tips li {
-    padding: 2vw 0;
-    padding-left: 8vw;
-    position: relative;
+    padding: 12px 0;
     color: #2c5282;
-    font-size: clamp(0.85rem, 3.8vw, 0.95rem);
-    line-height: 1.5;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 30px;
 }
 
 .tips li:before {
-    content: "•";
+    content: "→";
     position: absolute;
-    left: 3vw;
-    color: #2575fc;
+    left: 0;
+    color: #4299e1;
     font-weight: bold;
-    font-size: clamp(1rem, 4.5vw, 1.1rem);
+    font-size: 1.2rem;
 }
 
 /* ========== 页脚 ========== */
 footer {
     text-align: center;
-    margin-top: 8vw;
-    padding: 5vw;
-    color: #7f8c8d;
-    font-size: clamp(0.8rem, 3.5vw, 0.9rem);
+    margin-top: 50px;
+    padding: 30px 20px;
+    color: #718096;
+    font-size: 1rem;
     width: 100%;
-    flex-shrink: 0;
+    max-width: 800px;
+    border-top: 1px solid #e2e8f0;
 }
 
-/* ========== 特殊设备适配 ========== */
-/* iPhone刘海屏安全区域 */
-@supports (padding: max(0px)) {
-    body, header, .calculator-card, footer {
-        padding-left: max(5vw, env(safe-area-inset-left));
-        padding-right: max(5vw, env(safe-area-inset-right));
-    }
-    body {
-        padding-top: max(5vw, env(safe-area-inset-top));
-        padding-bottom: max(5vw, env(safe-area-inset-bottom));
-    }
+.footer-content {
+    width: 100%;
 }
 
-/* 超小屏幕优化 */
-@media (max-width: 320px) {
-    html {
-        font-size: 14px;
-    }
-    .quick-btn {
-        padding: 2.5vw 3.5vw;
-        font-size: 0.75rem;
-    }
+.footer-content p {
+    margin-bottom: 15px;
 }
 
-/* 平板和桌面端优化 */
-@media (min-width: 768px) {
-    body {
-        padding: 20px;
-    }
+.footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.footer-links code {
+    background: rgba(0,0,0,0.05);
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: #4a5568;
+    border: 1px solid #e2e8f0;
+}
+
+.link-btn {
+    background: none;
+    border: 2px solid #cbd5e0;
+    border-radius: 8px;
+    padding: 8px 20px;
+    color: #4a5568;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.link-btn:hover {
+    background: #6a11cb;
+    color: white;
+    border-color: #6a11cb;
+}
+
+.separator {
+    color: #cbd5e0;
+    font-weight: 300;
+}
+
+.browser-support {
+    font-size: 0.9rem;
+    color: #a0aec0;
+    margin-top: 20px;
+}
+
+/* ========== 复制成功提示 ========== */
+.copy-success {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: #48bb78;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+.copy-success.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ========== 响应式设计（核心） ========== */
+
+/* 平板设备 (768px - 1024px) */
+@media (max-width: 1024px) {
     .container {
-        max-width: 450px;
-    }
-    .calculator-card {
-        border-radius: 20px;
-        padding: 30px;
-    }
-    .date-input, .number-input {
         padding: 15px;
-        border-width: 2px;
-        border-radius: 10px;
-        font-size: 16px;
     }
-    .quick-btn, .calculate-btn {
-        padding: 12px 20px;
-        font-size: 15px;
+    
+    .calculator-card {
+        padding: 30px;
+        border-radius: 20px;
     }
+    
+    header h1 {
+        font-size: 2.2rem;
+    }
+    
     .result-area, .tips {
+        padding: 25px;
+    }
+    
+    .quick-btn {
+        padding: 10px 18px;
+        font-size: 0.95rem;
+    }
+}
+
+/* 大手机设备 (576px - 768px) */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    .calculator-card {
+        padding: 25px;
+        border-radius: 18px;
+    }
+    
+    header {
+        padding: 20px 15px;
+        margin-bottom: 30px;
+    }
+    
+    header h1 {
+        font-size: 1.9rem;
+    }
+    
+    header .subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .date-input, .number-input {
+        padding: 16px;
+        font-size: 1.05rem;
+    }
+    
+    .calculate-btn {
+        padding: 18px;
+        font-size: 1.2rem;
+    }
+    
+    .result-item.highlight,
+    .result-item.reminder {
+        margin: 0 -25px;
+        padding: 16px 25px;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* 小手机设备 (小于576px) */
+@media (max-width: 576px) {
+    body {
+        padding: 10px;
+        justify-content: flex-start;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    .calculator-card {
         padding: 20px;
-        border-radius: 15px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    
+    header {
+        padding: 15px 10px;
+        margin-bottom: 20px;
+    }
+    
+    header h1 {
+        font-size: 1.7rem;
+    }
+    
+    header .subtitle {
+        font-size: 1rem;
+    }
+    
+    .input-group label {
+        font-size: 1.05rem;
+    }
+    
+    .date-input, .number-input {
+        padding: 14px;
+        font-size: 1rem;
+        border-radius: 12px;
+    }
+    
+    .quick-tips {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .quick-btn {
+        width: 100%;
+        text-align: left;
+        padding: 12px 16px;
+    }
+    
+    .calculate-btn {
+        padding: 16px;
+        font-size: 1.1rem;
+    }
+    
+    .result-area {
+        padding: 20px;
+        border-radius: 16px;
+    }
+    
+    .result-area h3 {
+        font-size: 1.3rem;
+    }
+    
+    .result-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .result-value {
+        text-align: left;
+        padding-left: 0;
+        width: 100%;
+    }
+    
+    .result-item.highlight,
+    .result-item.reminder {
+        margin: 0 -20px;
+        padding: 15px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .tips {
+        padding: 20px;
+    }
+    
+    .tips li {
+        padding-left: 25px;
+        font-size: 1rem;
+    }
+    
+    .footer-links code {
+        font-size: 0.85rem;
+        word-break: break-all;
+    }
+}
+
+/* 超大桌面设备 (大于1200px) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1000px;
+    }
+    
+    .calculator-card {
+        max-width: 900px;
+        padding: 50px;
+    }
+    
+    .input-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+    
+    .input-group label {
+        grid-column: span 2;
+    }
+    
+    .date-input {
+        grid-column: 1;
+    }
+    
+    .number-input-container {
+        grid-column: 2;
+    }
+    
+    .quick-tips {
+        grid-column: span 2;
+    }
+}
+
+/* 超小高度设备适配 */
+@media (max-height: 700px) {
+    body {
+        justify-content: flex-start;
+        padding-top: 20px;
+    }
+    
+    header {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .calculator-card {
+        padding: 25px;
+    }
+}
+
+/* 打印样式 */
+@media print {
+    .calculate-btn, .quick-btn, .pc-hints, .link-btn, footer {
+        display: none !important;
+    }
+    
+    .calculator-card {
+        box-shadow: none !important;
+        border: 2px solid #000 !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        color: #e2e8f0;
+    }
+    
+    .calculator-card {
+        background: #2d3748;
+        border-color: #4a5568;
+    }
+    
+    .date-input, .number-input {
+        background: #4a5568;
+        border-color: #718096;
+        color: #e2e8f0;
+    }
+    
+    .quick-btn {
+        background: #4a5568;
+        border-color: #718096;
+        color: #e2e8f0;
+    }
+    
+    .result-area {
+        background: #4a5568;
+    }
+    
+    .tips {
+        background: #2c5282;
+        border-color: #4299e1;
+    }
+    
+    .footer-links code {
+        background: #4a5568;
+        color: #e2e8f0;
     }
 }
