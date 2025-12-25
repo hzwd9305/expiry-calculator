@@ -77,15 +77,15 @@ h1 {
 
 /* 特殊日期颜色 */
 .grid-date.tertiary {
-    color: #dc3545; /* 红色 - 超三日期 */
+    color: #dc3545;
 }
 
 .grid-date.expiry {
-    color: #6a11cb; /* 紫色 - 到期日期 */
+    color: #6a11cb;
 }
 
 .grid-date.reminder {
-    color: #2575fc; /* 蓝色 - 贴签日期 */
+    color: #2575fc;
 }
 
 /* 输入区域 */
