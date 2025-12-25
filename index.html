@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- APP图标设置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="到期计算器">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#6a11cb">
-    <!-- APP图标 -->
     <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
     <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
     <title>到期计算器</title>
     <style>
-        /* 样式直接内嵌，确保加载 */
         * {
             margin: 0;
             padding: 0;
@@ -33,7 +32,6 @@
             justify-content: center;
         }
 
-        /* 主容器 */
         .calculator-container {
             width: 100%;
             max-width: 500px;
@@ -62,12 +60,10 @@
             min-height: 130px;
         }
 
-        /* 移除右边框 */
         .q2, .q4 {
             border-right: none;
         }
 
-        /* 移除底边框 */
         .q3, .q4 {
             border-bottom: none;
         }
@@ -218,25 +214,21 @@
     <div class="calculator-container">
         <!-- 上部分：四个日期的象限 -->
         <div class="quadrant-grid">
-            <!-- 第一象限：当前日期 -->
             <div class="quadrant-item q1">
                 <div class="quadrant-label">当前日期</div>
                 <div id="current-date" class="quadrant-value">2025-12-25</div>
             </div>
             
-            <!-- 第二象限：超三日期 -->
             <div class="quadrant-item q2">
                 <div class="quadrant-label">超三日期</div>
                 <div id="tertiary-date" class="quadrant-value tertiary">2025-12-15</div>
             </div>
             
-            <!-- 第三象限：到期日期 -->
             <div class="quadrant-item q3">
                 <div class="quadrant-label">到期日期</div>
                 <div id="expiry-date" class="quadrant-value">2026-01-09</div>
             </div>
             
-            <!-- 第四象限：贴签日期 -->
             <div class="quadrant-item q4">
                 <div class="quadrant-label">贴签日期</div>
                 <div id="reminder-date" class="quadrant-value">2026-01-08</div>
@@ -245,13 +237,11 @@
 
         <!-- 下部分：输入区域 -->
         <div class="input-section">
-            <!-- 生产日期 -->
             <div class="input-row">
                 <label for="production-date">生产日期</label>
                 <input type="date" id="production-date" value="2025-12-25">
             </div>
             
-            <!-- 保质期 -->
             <div class="input-row">
                 <label for="shelf-life">保质期（天）</label>
                 <div class="shelf-life-control">
@@ -276,22 +266,16 @@
         });
 
         function initializeCalculator() {
-            // 设置当前日期
             updateCurrentDate();
             
-            // 设置默认值（今天为生产日期）
             const today = new Date();
             document.getElementById('production-date').value = formatDateForInput(today);
             document.getElementById('shelf-life').value = 15;
             
-            // 绑定事件
             setupEventListeners();
-            
-            // 初始计算
             calculateAllDates();
         }
 
-        // ==================== 日期格式化 ====================
         function formatDateForInput(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -307,25 +291,20 @@
             return `${year}-${month}-${day}`;
         }
 
-        // 更新当前日期显示
         function updateCurrentDate() {
             const today = new Date();
             document.getElementById('current-date').textContent = formatDateForDisplay(today);
         }
 
-        // ==================== 事件绑定 ====================
         function setupEventListeners() {
-            // 生产日期变化
             document.getElementById('production-date').addEventListener('change', calculateAllDates);
             
-            // 保质期输入
             let timer;
             document.getElementById('shelf-life').addEventListener('input', function() {
                 clearTimeout(timer);
                 timer = setTimeout(calculateAllDates, 300);
             });
             
-            // 快捷按钮（已更新：移除2年，添加9个月）
             document.querySelectorAll('.quick-days button').forEach(button => {
                 button.addEventListener('click', function() {
                     const days = parseInt(this.getAttribute('data-days'));
@@ -337,34 +316,29 @@
             });
         }
 
-        // ==================== 核心计算 ====================
         function calculateAllDates() {
             try {
-                // 获取输入值
                 const productionDateStr = document.getElementById('production-date').value;
                 const shelfLifeInput = document.getElementById('shelf-life').value;
                 
-                // 验证保质期
                 const shelfLife = parseFloat(shelfLifeInput);
                 if (isNaN(shelfLife) || shelfLife <= 0) {
                     resetDates();
                     return;
                 }
                 
-                // 计算超三日期（当前日期 - 保质期的三分之一）
+                // 超三日期 = 当前日期 - (保质期 ÷ 3)
                 const today = new Date();
                 const tertiaryDate = new Date(today);
                 tertiaryDate.setDate(today.getDate() - Math.floor(shelfLife / 3));
                 document.getElementById('tertiary-date').textContent = formatDateForDisplay(tertiaryDate);
                 
-                // 验证生产日期
                 if (!productionDateStr) {
                     document.getElementById('expiry-date').textContent = '--';
                     document.getElementById('reminder-date').textContent = '--';
                     return;
                 }
                 
-                // 计算到期日期
                 const productionDate = new Date(productionDateStr);
                 if (isNaN(productionDate.getTime())) {
                     document.getElementById('expiry-date').textContent = '--';
@@ -376,7 +350,6 @@
                 expiryDate.setDate(productionDate.getDate() + Math.floor(shelfLife));
                 document.getElementById('expiry-date').textContent = formatDateForDisplay(expiryDate);
                 
-                // 计算贴签日期（到期前1天）
                 const reminderDate = new Date(expiryDate);
                 reminderDate.setDate(expiryDate.getDate() - 1);
                 document.getElementById('reminder-date').textContent = formatDateForDisplay(reminderDate);
@@ -393,7 +366,6 @@
             document.getElementById('reminder-date').textContent = '--';
         }
 
-        // 每分钟更新当前日期
         setInterval(updateCurrentDate, 60000);
     </script>
 </body>
