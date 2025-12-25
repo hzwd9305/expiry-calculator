@@ -288,4 +288,50 @@ function performCalculation() {
             return;
         }
         if (shelfLife > 9999) {
-            setShelfLife(9999); // 
+            setShelfLife(9999); // 限制最大值
+            return;
+        }
+
+        // 4. 解析生产日期
+        const productionDate = new Date(productionDateStr);
+        if (isNaN(productionDate.getTime())) {
+            // 日期无效，设置为今天
+            const today = new Date();
+            document.getElementById('production-date').value = formatDateForInput(today);
+            return setTimeout(performCalculation, 100);
+        }
+
+        // 5. 计算到期日期（生产日期 + 保质期）
+        const expiryDate = addDays(productionDate, shelfLife);
+        
+        // 6. 计算贴签日期（到期日期 - 1天）
+        const reminderDate = subtractDays(expiryDate, 1);
+        
+        // 7. 计算超三日期（当前日期 - (保质期 ÷ 3)）优先计算括号里
+        const today = new Date();
+        const oneThirdOfShelfLife = Math.round(shelfLife / 3);
+        const tertiaryDate = subtractDays(today, oneThirdOfShelfLife);
+
+        // 8. 检查是否跨越闰年
+        const isLeapYearInvolved = checkLeapYearInvolvement(productionDate, expiryDate);
+        const leapYearNote = document.getElementById('leap-year-note');
+        if (isLeapYearInvolved) {
+            leapYearNote.style.display = 'flex';
+        } else {
+            leapYearNote.style.display = 'none';
+        }
+
+        // 9. 更新显示
+        document.getElementById('expiry-date').textContent = safeFormatDate(expiryDate);
+        document.getElementById('reminder-date').textContent = safeFormatDate(reminderDate);
+        document.getElementById('tertiary-date-display').textContent = safeFormatDate(tertiaryDate);
+
+    } catch (error) {
+        console.error('计算错误:', error);
+        showError('计算过程中出现错误，请检查输入');
+        setShelfLife(365); // 恢复默认值
+    }
+}
+
+// ==================== 每分钟更新当前日期 ====================
+setInterval(updateCurrentDate, 60000);
