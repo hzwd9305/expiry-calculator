@@ -49,14 +49,65 @@
                     <label for="shelf-life">
                         保质期（天数）
                     </label>
-                    <div class="number-input-container">
-                        <input type="number" id="shelf-life" value="365" min="1" max="9999"
-                               class="number-input" placeholder="输入保质期天数" inputmode="decimal">
-                        <span class="unit">天</span>
+                    
+                    <!-- 新：带下拉选择的自定义输入容器 -->
+                    <div class="custom-input-container">
+                        <div class="input-with-dropdown">
+                            <input type="number" id="shelf-life" value="365" min="1" max="9999"
+                                   class="number-input" placeholder="输入保质期天数" inputmode="decimal">
+                            <span class="unit">天</span>
+                            <button type="button" class="dropdown-toggle" id="shelf-life-dropdown-toggle">
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 下拉面板 -->
+                        <div class="dropdown-panel" id="shelf-life-dropdown-panel">
+                            <div class="dropdown-header">
+                                <span>快速选择</span>
+                            </div>
+                            
+                            <!-- 常用日期按钮 -->
+                            <div class="quick-selection-buttons">
+                                <button type="button" class="quick-btn" data-days="15">15天</button>
+                                <button type="button" class="quick-btn" data-days="30">30天</button>
+                                <button type="button" class="quick-btn" data-days="90">90天</button>
+                                <button type="button" class="quick-btn" data-days="180">半年(180天)</button>
+                                <button type="button" class="quick-btn" data-days="365">1年(365天)</button>
+                                <button type="button" class="quick-btn" data-days="730">2年(730天)</button>
+                            </div>
+                            
+                            <!-- 滑动选择器 -->
+                            <div class="slider-section">
+                                <div class="slider-header">
+                                    <span>滑动选择</span>
+                                    <span class="slider-value-display" id="slider-value-display">365天</span>
+                                </div>
+                                <input type="range" id="shelf-life-slider" class="shelf-life-slider" 
+                                       min="1" max="999" value="365" step="1">
+                                <div class="slider-scale">
+                                    <span>1天</span>
+                                    <span>500天</span>
+                                    <span>999天</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 手动输入区 -->
+                            <div class="manual-input-section">
+                                <div class="input-with-buttons">
+                                    <input type="number" id="manual-input" class="manual-input" 
+                                           placeholder="手动输入天数" min="1" max="9999">
+                                    <button type="button" class="apply-btn" id="apply-manual-input">应用</button>
+                                </div>
+                                <div class="input-hint">
+                                    <small>可输入1-9999之间的天数</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="quick-tips-note">
-                        💡 直接输入保质期天数，修改后自动计算
+                        💡 支持手动输入、快速选择和滑动调节
                     </div>
                 </div>
             </div>
