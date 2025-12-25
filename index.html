@@ -8,21 +8,19 @@
 </head>
 <body>
     <div class="wrapper">
-        <!-- 标题区域 -->
         <div class="header">
             <h1 class="main-title">到期计算器</h1>
             <p class="sub-title">支持闰年月计算</p>
         </div>
 
-        <!-- 日期卡片区域 -->
         <div class="card-container">
             <div class="date-card">
                 <div class="card-label">当前日期</div>
-                <div class="card-value current" id="currentDate">2025年12月25日</div>
+                <div class="card-value current" id="currentDate">2025年11月25日</div>
             </div>
             <div class="date-card">
                 <div class="card-label">超三日期</div>
-                <div class="card-value over-three" id="overThreeDate">2025年8月25日</div>
+                <div class="card-value over-three" id="overThreeDate">2025年7月25日</div>
             </div>
             <div class="date-card">
                 <div class="card-label">到期日期</div>
@@ -34,7 +32,6 @@
             </div>
         </div>
 
-        <!-- 输入区域（保留保质期“天”标注） -->
         <div class="input-container">
             <div class="input-item">
                 <label class="input-label">生产日期</label>
@@ -42,22 +39,21 @@
             </div>
             <div class="input-item">
                 <label class="input-label">保质期（天）</label>
-                <input type="number" class="form-input" id="shelfLife" value="365" min="1">
+                <input type="number" class="form-input" id="shelfLife" value="360" min="1">
             </div>
-            <!-- 快捷按钮（按天） -->
+            <!-- 快捷按钮（按天，示例：360天=12个月） -->
             <div class="btn-row">
-                <button class="quick-btn" onclick="setShelfLife(15)">15天</button>
                 <button class="quick-btn" onclick="setShelfLife(30)">30天</button>
                 <button class="quick-btn" onclick="setShelfLife(90)">90天</button>
+                <button class="quick-btn" onclick="setShelfLife(180)">180天</button>
             </div>
             <div class="btn-row">
-                <button class="quick-btn" onclick="setShelfLife(180)">半年</button>
-                <button class="quick-btn" onclick="setShelfLife(365)">1年</button>
-                <button class="quick-btn" onclick="setShelfLife(730)">2年</button>
+                <button class="quick-btn" onclick="setShelfLife(360)">360天</button>
+                <button class="quick-btn" onclick="setShelfLife(720)">720天</button>
+                <button class="quick-btn" onclick="setShelfLife(1080)">1080天</button>
             </div>
         </div>
 
-        <!-- 版权信息 -->
         <div class="copyright">© 2025 到期计算器</div>
     </div>
 
