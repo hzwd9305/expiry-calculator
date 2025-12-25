@@ -2,9 +2,217 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="到期计算器">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6a11cb">
+    <!-- APP图标 -->
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
     <title>到期计算器</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 样式直接内嵌，确保加载 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.4;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 主容器 */
+        .calculator-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        /* ===== 象限网格 ===== */
+        .quadrant-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .quadrant-item {
+            padding: 25px 15px;
+            border-right: 1px solid #eaeaea;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 130px;
+        }
+
+        /* 移除右边框 */
+        .q2, .q4 {
+            border-right: none;
+        }
+
+        /* 移除底边框 */
+        .q3, .q4 {
+            border-bottom: none;
+        }
+
+        .quadrant-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .quadrant-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .quadrant-value.tertiary {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        /* ===== 输入区域 ===== */
+        .input-section {
+            padding: 30px 25px;
+        }
+
+        .input-row {
+            margin-bottom: 30px;
+        }
+
+        .input-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-row label {
+            display: block;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .input-row input[type="date"],
+        .input-row input[type="number"] {
+            width: 100%;
+            height: 50px;
+            padding: 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .input-row input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+
+        /* 保质期控制区域 */
+        .shelf-life-control {
+            width: 100%;
+        }
+
+        .quick-days {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-days button {
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .quick-days button:hover {
+            background: #f5f5f5;
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        .quick-days button:active {
+            background: #eaeaea;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            
+            .quadrant-item {
+                padding: 20px 12px;
+                min-height: 110px;
+            }
+            
+            .quadrant-label {
+                font-size: 14px;
+            }
+            
+            .quadrant-value {
+                font-size: 18px;
+            }
+            
+            .input-section {
+                padding: 25px 20px;
+            }
+            
+            .quick-days {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 400px) {
+            .quadrant-item {
+                padding: 15px 10px;
+                min-height: 100px;
+            }
+            
+            .quadrant-label {
+                font-size: 13px;
+            }
+            
+            .quadrant-value {
+                font-size: 16px;
+            }
+            
+            .quick-days {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="calculator-container">
@@ -53,14 +261,140 @@
                         <button data-days="30">30天</button>
                         <button data-days="90">90天</button>
                         <button data-days="180">半年</button>
+                        <button data-days="270">9个月</button>
                         <button data-days="365">1年</button>
-                        <button data-days="730">2年</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCalculator();
+        });
+
+        function initializeCalculator() {
+            // 设置当前日期
+            updateCurrentDate();
+            
+            // 设置默认值（今天为生产日期）
+            const today = new Date();
+            document.getElementById('production-date').value = formatDateForInput(today);
+            document.getElementById('shelf-life').value = 15;
+            
+            // 绑定事件
+            setupEventListeners();
+            
+            // 初始计算
+            calculateAllDates();
+        }
+
+        // ==================== 日期格式化 ====================
+        function formatDateForInput(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDateForDisplay(date) {
+            if (!date || isNaN(date.getTime())) return '--';
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // 更新当前日期显示
+        function updateCurrentDate() {
+            const today = new Date();
+            document.getElementById('current-date').textContent = formatDateForDisplay(today);
+        }
+
+        // ==================== 事件绑定 ====================
+        function setupEventListeners() {
+            // 生产日期变化
+            document.getElementById('production-date').addEventListener('change', calculateAllDates);
+            
+            // 保质期输入
+            let timer;
+            document.getElementById('shelf-life').addEventListener('input', function() {
+                clearTimeout(timer);
+                timer = setTimeout(calculateAllDates, 300);
+            });
+            
+            // 快捷按钮（已更新：移除2年，添加9个月）
+            document.querySelectorAll('.quick-days button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const days = parseInt(this.getAttribute('data-days'));
+                    if (!isNaN(days) && days > 0) {
+                        document.getElementById('shelf-life').value = days;
+                        calculateAllDates();
+                    }
+                });
+            });
+        }
+
+        // ==================== 核心计算 ====================
+        function calculateAllDates() {
+            try {
+                // 获取输入值
+                const productionDateStr = document.getElementById('production-date').value;
+                const shelfLifeInput = document.getElementById('shelf-life').value;
+                
+                // 验证保质期
+                const shelfLife = parseFloat(shelfLifeInput);
+                if (isNaN(shelfLife) || shelfLife <= 0) {
+                    resetDates();
+                    return;
+                }
+                
+                // 计算超三日期（当前日期 - 保质期的三分之一）
+                const today = new Date();
+                const tertiaryDate = new Date(today);
+                tertiaryDate.setDate(today.getDate() - Math.floor(shelfLife / 3));
+                document.getElementById('tertiary-date').textContent = formatDateForDisplay(tertiaryDate);
+                
+                // 验证生产日期
+                if (!productionDateStr) {
+                    document.getElementById('expiry-date').textContent = '--';
+                    document.getElementById('reminder-date').textContent = '--';
+                    return;
+                }
+                
+                // 计算到期日期
+                const productionDate = new Date(productionDateStr);
+                if (isNaN(productionDate.getTime())) {
+                    document.getElementById('expiry-date').textContent = '--';
+                    document.getElementById('reminder-date').textContent = '--';
+                    return;
+                }
+                
+                const expiryDate = new Date(productionDate);
+                expiryDate.setDate(productionDate.getDate() + Math.floor(shelfLife));
+                document.getElementById('expiry-date').textContent = formatDateForDisplay(expiryDate);
+                
+                // 计算贴签日期（到期前1天）
+                const reminderDate = new Date(expiryDate);
+                reminderDate.setDate(expiryDate.getDate() - 1);
+                document.getElementById('reminder-date').textContent = formatDateForDisplay(reminderDate);
+                
+            } catch (error) {
+                console.error('计算错误:', error);
+                resetDates();
+            }
+        }
+
+        function resetDates() {
+            document.getElementById('tertiary-date').textContent = '--';
+            document.getElementById('expiry-date').textContent = '--';
+            document.getElementById('reminder-date').textContent = '--';
+        }
+
+        // 每分钟更新当前日期
+        setInterval(updateCurrentDate, 60000);
+    </script>
 </body>
 </html>
