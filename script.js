@@ -1,31 +1,67 @@
-// ========== 设备检测与优化 ==========
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+// ========== 平台检测与优化 ==========
+const platform = {
+    isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+    isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent),
+    isAndroid: /Android/.test(navigator.userAgent),
+    isWindows: /Windows/.test(navigator.userAgent),
+    isMac: /Macintosh|Mac Intel|MacPPC|Mac68K/.test(navigator.userAgent),
+    isChrome: /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent),
+    isFirefox: /Firefox/.test(navigator.userAgent),
+    isSafari: /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent),
+    isEdge: /Edg/.test(navigator.userAgent),
+    isWechat: /MicroMessenger/.test(navigator.userAgent)
+};
 
-// 优化移动端输入体验
-function optimizeMobileInput() {
-    if (isMobile) {
+// 显示平台提示
+function showPlatformHint() {
+    const hintEl = document.getElementById('platform-hint');
+    if (!hintEl) return;
+    
+    let hint = '';
+    if (platform.isMobile) {
+        hint = '📱 移动端优化版';
+        if (platform.isIOS) hint += ' (iOS)';
+        if (platform.isAndroid) hint += ' (Android)';
+    } else {
+        hint = '💻 电脑端优化版';
+        if (platform.isWindows) hint += ' (Windows)';
+        if (platform.isMac) hint += ' (Mac)';
+    }
+    
+    if (platform.isWechat) hint += ' | 建议在浏览器中打开';
+    
+    hintEl.textContent = hint;
+}
+
+// 控制PC提示显示
+function togglePCHints() {
+    const pcHints = document.getElementById('pc-hints');
+    if (pcHints) {
+        pcHints.style.display = platform.isMobile ? 'none' : 'block';
+    }
+}
+
+// 优化全平台输入体验
+function optimizePlatformInputs() {
+    const numberInput = document.getElementById('shelf-life');
+    if (numberInput) {
         // 设置正确的输入模式
-        const numberInput = document.getElementById('shelf-life');
-        if (numberInput) {
+        if (platform.isMobile) {
             numberInput.setAttribute('inputmode', 'decimal');
+        } else {
+            numberInput.setAttribute('inputmode', 'numeric');
         }
-        
-        // 防止iOS缩放
-        document.addEventListener('focusin', function(e) {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+    }
+    
+    // 防止iOS缩放
+    if (platform.isIOS) {
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
                 setTimeout(() => {
                     document.body.style.zoom = '100%';
                 }, 100);
-            }
-        });
-        
-        document.addEventListener('focusout', function(e) {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-                setTimeout(() => {
-                    document.body.style.zoom = '100%';
-                }, 100);
-            }
+            });
         });
     }
 }
@@ -34,7 +70,6 @@ function optimizeMobileInput() {
 function containsGarbledText(str) {
     if (!str || typeof str !== 'string') return false;
     
-    // 常见的乱码字符范围
     const garbledRanges = [
         /[\uff00-\uffef]/,
         /[\u3000-\u303f]/,
@@ -52,7 +87,7 @@ function containsGarbledText(str) {
         
         for (const range of garbledRanges) {
             if (range.test(char)) {
-                console.warn('检测到乱码字符:', char, '在位置', i);
+                console.warn('检测到乱码字符:', char);
                 return true;
             }
         }
@@ -95,7 +130,6 @@ function safeFormatDate(dateStr) {
         const month = date.getMonth() + 1;
         const day = date.getDate();
         
-        // 直接拼接，避免本地化问题
         return `${year}年${month}月${day}日`;
         
     } catch (error) {
@@ -204,7 +238,7 @@ function calculateExpiry() {
             expiryDate.setHours(expiryDate.getHours() + Math.round(decimalPart * 24));
         }
         
-        // 计算提醒日期（到期日 - 1天）
+        // 计算贴签日期（到期日 - 1天）
         const reminderDate = new Date(expiryDate);
         reminderDate.setDate(reminderDate.getDate() - 1);
         
@@ -230,15 +264,34 @@ function formatShelfLife(days) {
     return days + '天';
 }
 
-// ========== 事件处理 ==========
+// ========== 事件处理（全平台优化） ==========
 function setupQuickButtons() {
     const quickBtns = document.querySelectorAll('.quick-btn');
+    
     quickBtns.forEach(button => {
-        // 同时支持点击和触摸
+        // 点击事件
         button.addEventListener('click', handleQuickButton);
+        
+        // 触摸事件（移动端）
+        button.addEventListener('touchstart', function(e) {
+            this.style.transform = 'scale(0.95)';
+        });
+        
         button.addEventListener('touchend', function(e) {
+            this.style.transform = 'scale(1)';
             e.preventDefault();
             handleQuickButton.call(this);
+        });
+        
+        // 鼠标事件（桌面端）
+        button.addEventListener('mouseenter', function() {
+            if (!platform.isMobile) {
+                this.style.transform = 'translateY(-2px)';
+            }
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
         });
     });
     
@@ -266,13 +319,13 @@ function setupAutoCalculate() {
             input.addEventListener('input', function() {
                 clearError();
                 // 移动端实时计算优化
-                if (isMobile && this.id === 'shelf-life' && this.value.length > 0) {
-                    setTimeout(calculateExpiry, 300);
+                if (platform.isMobile && this.id === 'shelf-life' && this.value.length > 0) {
+                    setTimeout(calculateExpiry, 500);
                 }
             });
             
             // 优化移动端输入体验
-            if (isMobile) {
+            if (platform.isMobile) {
                 input.addEventListener('focus', function() {
                     setTimeout(() => {
                         this.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -283,32 +336,107 @@ function setupAutoCalculate() {
     });
 }
 
+// ========== 键盘快捷键系统（桌面端优化） ==========
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            calculateExpiry();
+        // 阻止快捷键在输入框中生效
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            // 允许在输入框中使用部分快捷键
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                calculateExpiry();
+                return;
+            }
+            
+            if (e.key === 'Escape') {
+                e.target.blur();
+                return;
+            }
+            
+            // 输入框内禁用其他快捷键
+            return;
         }
         
-        // 移动端虚拟键盘完成按钮
-        if (e.key === 'Go' || e.key === 'Search' || e.key === 'Send') {
-            e.preventDefault();
-            calculateExpiry();
+        // 全局快捷键
+        switch(e.key) {
+            case 'Enter':
+                e.preventDefault();
+                calculateExpiry();
+                break;
+                
+            case 'Escape':
+                clearError();
+                break;
+                
+            case 'r':
+            case 'R':
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    calculateExpiry();
+                }
+                break;
+                
+            // 数字快捷键对应快捷按钮
+            case '1':
+                document.querySelector('.quick-btn[data-days="30"]')?.click();
+                break;
+            case '2':
+                document.querySelector('.quick-btn[data-days="90"]')?.click();
+                break;
+            case '3':
+                document.querySelector('.quick-btn[data-days="180"]')?.click();
+                break;
+            case '4':
+                document.querySelector('.quick-btn[data-days="365"]')?.click();
+                break;
+            case '5':
+                document.querySelector('.quick-btn[data-days="730"]')?.click();
+                break;
+                
+            // 上下箭头调整保质期天数
+            case 'ArrowUp':
+                e.preventDefault();
+                adjustShelfLife(1);
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                adjustShelfLife(-1);
+                break;
+                
+            // 空格键计算
+            case ' ':
+                if (e.target.tagName !== 'BUTTON') {
+                    e.preventDefault();
+                    calculateExpiry();
+                }
+                break;
         }
     });
+    
+    // 保质期微调函数
+    function adjustShelfLife(delta) {
+        const input = document.getElementById('shelf-life');
+        if (input) {
+            let value = parseFloat(input.value) || 365;
+            value = Math.max(1, Math.min(9999, value + delta));
+            input.value = Math.round(value);
+            calculateExpiry();
+        }
+    }
 }
 
-// 防止重复提交
+// ========== 按钮防抖和反馈 ==========
 function setupButtonDebounce() {
     const calculateBtn = document.getElementById('calculate-btn');
     let isCalculating = false;
     
+    // 点击事件
     calculateBtn.addEventListener('click', function() {
         if (!isCalculating) {
             isCalculating = true;
             calculateExpiry();
             
-            // 按钮反馈效果
+            // 视觉反馈
             this.style.opacity = '0.8';
             setTimeout(() => {
                 this.style.opacity = '1';
@@ -317,7 +445,18 @@ function setupButtonDebounce() {
         }
     });
     
-    // 触摸反馈
+    // 桌面端悬停效果
+    if (!platform.isMobile) {
+        calculateBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-4px)';
+        });
+        
+        calculateBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    }
+    
+    // 移动端触摸反馈
     calculateBtn.addEventListener('touchstart', function() {
         this.style.transform = 'scale(0.98)';
     });
@@ -327,11 +466,54 @@ function setupButtonDebounce() {
     });
 }
 
+// ========== 实用工具功能 ==========
+function setupUtilityFunctions() {
+    // 复制网址功能
+    const copyBtn = document.getElementById('copy-url');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                showCopySuccess();
+            }).catch(err => {
+                // 备用方案
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopySuccess();
+            });
+        });
+    }
+    
+    // 打印功能
+    const printBtn = document.getElementById('print-page');
+    if (printBtn) {
+        printBtn.addEventListener('click', function() {
+            window.print();
+        });
+    }
+    
+    function showCopySuccess() {
+        const successEl = document.getElementById('copy-success');
+        if (successEl) {
+            successEl.classList.add('show');
+            setTimeout(() => {
+                successEl.classList.remove('show');
+            }, 2000);
+        }
+    }
+}
+
 // ========== 页面加载初始化 ==========
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // 设备优化
-        optimizeMobileInput();
+        // 平台检测与提示
+        showPlatformHint();
+        togglePCHints();
+        optimizePlatformInputs();
         
         // 基础初始化
         initializeDates();
@@ -340,6 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setupAutoCalculate();
         setupKeyboardShortcuts();
         setupButtonDebounce();
+        setupUtilityFunctions();
         
         // 初始计算
         setTimeout(calculateExpiry, 300);
@@ -350,18 +533,27 @@ document.addEventListener('DOMContentLoaded', function() {
             showError('系统错误，请刷新页面重试');
         });
         
-        // 防止页面滚动（PWA优化）
+        // PWA优化
         if (window.matchMedia('(display-mode: standalone)').matches) {
             document.body.style.overflow = 'hidden';
+            document.getElementById('platform-hint').textContent += ' | 📲 已安装为APP';
         }
         
-        // 离线检测
+        // 网络状态检测
         window.addEventListener('offline', function() {
-            showError('网络连接已断开，部分功能可能受限');
+            showError('网络连接已断开，计算功能仍可用');
         });
         
         window.addEventListener('online', function() {
             clearError();
+        });
+        
+        // 页面可见性API（标签页切换优化）
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // 页面重新显示时重新计算（防止日期变化）
+                calculateExpiry();
+            }
         });
         
     } catch (error) {
@@ -370,11 +562,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// PWA安装提示（可选）
+// Service Worker注册（PWA增强）
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('/expiry-calculator/sw.js').catch(err => {
-            console.log('ServiceWorker 注册失败:', err);
+            console.log('ServiceWorker 注册失败（不影响使用）:', err);
         });
     });
 }
+
+// 浏览器控制台友好提示
+console.log('%c🧮 到期计算器 - 全平台适配版', 'color: #6a11cb; font-size: 16px; font-weight: bold;');
+console.log('%c✓ 已适配所有手机和电脑浏览器', 'color: #48bb78;');
+console.log('%c✓ 支持键盘快捷键和触摸操作', 'color: #4299e1;');
