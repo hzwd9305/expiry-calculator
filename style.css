@@ -148,8 +148,8 @@ header h1 {
     font-size: 1.05em;
 }
 
-/* 输入框 */
-.date-input, .number-input {
+/* 日期输入框 */
+.date-input {
     width: 100%;
     padding: 14px;
     border: 2px solid #e0e0e0;
@@ -159,31 +159,263 @@ header h1 {
     font-family: inherit;
 }
 
-.date-input:focus, .number-input:focus {
+.date-input:focus {
     border-color: #6a11cb;
     box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
     outline: none;
 }
 
-.number-input-container {
+/* ===== 自定义输入容器 ===== */
+.custom-input-container {
     position: relative;
+    width: 100%;
 }
 
-.number-input-container .unit {
+/* 带下拉按钮的输入框 */
+.input-with-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.number-input {
+    width: 100%;
+    padding: 14px 50px 14px 14px; /* 右侧留出下拉按钮空间 */
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1.05em;
+    transition: all 0.2s;
+    font-family: inherit;
+    -moz-appearance: textfield; /* 隐藏数字输入框的箭头 */
+}
+
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.number-input:focus {
+    border-color: #6a11cb;
+    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+    outline: none;
+}
+
+.input-with-dropdown .unit {
     position: absolute;
-    right: 14px;
+    right: 40px; /* 在按钮左侧 */
     top: 50%;
     transform: translateY(-50%);
     color: #666;
     font-weight: 500;
     font-size: 1em;
+    pointer-events: none;
 }
 
-.quick-tips-note {
-    font-size: 0.85em;
+/* 下拉切换按钮 */
+.dropdown-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 40px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-left: none;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.dropdown-toggle:hover {
+    background: #e9ecef;
+}
+
+.dropdown-arrow {
+    font-size: 0.8em;
+    color: #666;
+    transition: transform 0.3s;
+}
+
+.dropdown-toggle.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* ===== 下拉面板 ===== */
+.dropdown-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    margin-top: -2px;
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.dropdown-panel.active {
+    display: block;
+}
+
+/* 下拉面板头部 */
+.dropdown-header {
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.95em;
+}
+
+/* 快速选择按钮 */
+.quick-selection-buttons {
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.quick-btn {
+    padding: 10px 8px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #444;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.quick-btn:hover {
+    background: #e9ecef;
+    border-color: #6a11cb;
+    color: #6a11cb;
+}
+
+/* 滑动选择器 */
+.slider-section {
+    padding: 20px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.slider-header span:first-child {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.95em;
+}
+
+.slider-value-display {
+    font-weight: 700;
+    color: #6a11cb;
+    font-size: 1em;
+}
+
+.shelf-life-slider {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(to right, #4CAF50, #FF9800, #f44336);
+    border-radius: 4px;
+    outline: none;
+    margin: 10px 0;
+}
+
+.shelf-life-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #6a11cb;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.shelf-life-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #6a11cb;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.slider-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.8em;
+    color: #777;
+}
+
+/* 手动输入区 */
+.manual-input-section {
+    padding: 15px;
+}
+
+.input-with-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.manual-input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    font-family: inherit;
+}
+
+.manual-input:focus {
+    border-color: #6a11cb;
+    outline: none;
+}
+
+.apply-btn {
+    padding: 12px 20px;
+    background: #6a11cb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.apply-btn:hover {
+    background: #5a0db3;
+}
+
+.input-hint {
+    text-align: center;
     color: #888;
-    margin-top: 10px;
-    font-style: italic;
+    font-size: 0.8em;
 }
 
 /* ===== 结果区域 ===== */
@@ -285,6 +517,22 @@ footer {
     .date-input, .number-input {
         padding: 12px;
         font-size: 1em;
+    }
+    
+    .number-input {
+        padding-right: 45px;
+    }
+    
+    .dropdown-toggle {
+        width: 35px;
+    }
+    
+    .input-with-dropdown .unit {
+        right: 35px;
+    }
+    
+    .quick-selection-buttons {
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .result-row {
