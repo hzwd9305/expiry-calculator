@@ -34,17 +34,17 @@
             </div>
         </div>
 
-        <!-- 输入区域 -->
+        <!-- 输入区域（保质期改为月） -->
         <div class="input-container">
             <div class="input-item">
                 <label class="input-label">生产日期</label>
                 <input type="date" class="form-input" id="productionDate" value="2025-11-25">
             </div>
             <div class="input-item">
-                <label class="input-label">保质期（天）</label>
-                <input type="number" class="form-input" id="shelfLife" value="365" min="1">
+                <label class="input-label">保质期（月）</label>
+                <input type="number" class="form-input" id="shelfLife" value="12" min="1">
             </div>
-            <!-- 快捷按钮 -->
+            <!-- 快捷按钮（天数转月数） -->
             <div class="btn-row">
                 <button class="quick-btn" onclick="setShelfLife(15)">15天</button>
                 <button class="quick-btn" onclick="setShelfLife(30)">30天</button>
