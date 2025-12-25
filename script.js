@@ -1,27 +1,41 @@
 // ==================== 初始化 ====================
 function initializePage() {
     try {
-        // 1. 设置生产日期为30天前
+        // 1. 设置默认日期（当前日期）
         const today = new Date();
-        const productionDate = new Date(today);
-        productionDate.setDate(today.getDate() - 30);
-        document.getElementById('production-date').value = productionDate.toISOString().split('T')[0];
-        
-        // 2. 显示当前日期和年份
         updateCurrentDate();
-        document.getElementById('current-year').textContent = today.getFullYear();
         
-        // 3. 设置输入变化自动计算
+        // 2. 设置生产日期为30天前（示例数据）
+        const defaultProductionDate = new Date(today);
+        defaultProductionDate.setDate(today.getDate() - 30);
+        document.getElementById('production-date').value = formatDateForInput(defaultProductionDate);
+        
+        // 3. 设置默认保质期15天（如截图所示）
+        document.getElementById('shelf-life').value = 15;
+        
+        // 4. 设置输入变化自动计算
         setupAutoCalculate();
         
-        // 4. 初始计算一次
-        setTimeout(performCalculation, 100);
+        // 5. 设置快捷按钮事件
+        setupQuickButtons();
+        
+        // 6. 初始计算一次
+        performCalculation();
+        
     } catch (error) {
         console.error('初始化错误:', error);
     }
 }
 
-// ==================== 日期格式化 ====================
+// ==================== 日期格式化函数 ====================
+function formatDateForInput(date) {
+    // 格式：YYYY-MM-DD 用于input[type="date"]
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 function safeFormatDate(date) {
     try {
         if (!date || isNaN(date.getTime())) return '--';
@@ -53,6 +67,20 @@ function setupAutoCalculate() {
     });
 }
 
+// ==================== 快捷按钮设置 ====================
+function setupQuickButtons() {
+    const quickButtons = document.querySelectorAll('.quick-btn');
+    quickButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const days = parseInt(this.getAttribute('data-days'));
+            if (!isNaN(days) && days > 0) {
+                document.getElementById('shelf-life').value = days;
+                performCalculation();
+            }
+        });
+    });
+}
+
 // ==================== 核心计算 ====================
 function performCalculation() {
     try {
@@ -64,7 +92,7 @@ function performCalculation() {
         const shelfLife = parseFloat(shelfLifeInput);
         const hasValidShelfLife = !isNaN(shelfLife) && shelfLife > 0 && shelfLife <= 9999;
         
-        // 3. 计算超三日期 = 当前日期 - (保质期天数 ÷ 3)【总是计算】
+        // 3. 计算超三日期 = 当前日期 - (保质期天数 ÷ 3)
         const today = new Date();
         if (hasValidShelfLife) {
             const tertiaryDate = new Date(today);
@@ -76,13 +104,16 @@ function performCalculation() {
         
         // 4. 验证生产日期（到期日期和贴签日期需要这个）
         if (!productionDateStr) {
-            // 只清空到期日期和贴签日期
             document.getElementById('expiry-date').textContent = '--';
             document.getElementById('reminder-date').textContent = '--';
             return;
         }
         
-        if (!hasValidShelfLife) return; // 保质期无效时，不计算到期日
+        if (!hasValidShelfLife) {
+            document.getElementById('expiry-date').textContent = '--';
+            document.getElementById('reminder-date').textContent = '--';
+            return;
+        }
         
         // 5. 计算到期日
         const productionDate = new Date(productionDateStr);
@@ -111,8 +142,9 @@ function performCalculation() {
         
     } catch (error) {
         console.error('计算错误:', error);
-        // 出错时确保超三日期仍然显示
         document.getElementById('tertiary-date-display').textContent = '--';
+        document.getElementById('expiry-date').textContent = '--';
+        document.getElementById('reminder-date').textContent = '--';
     }
 }
 
