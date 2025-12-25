@@ -7,80 +7,57 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
-        <!-- 顶部标题区域 -->
-        <div class="header-area">
-            <h1 class="main-title">到期计算器</h1>
-            <p class="sub-title">支持闰年月计算</p>
-        </div>
-
-        <!-- 日期显示区域 -->
-        <div class="date-display-container">
-            <!-- 当前日期 -->
-            <div class="date-display-item">
-                <div class="date-label">当前日期</div>
-                <div id="current-date-display" class="date-value">2025年12月25日</div>
+    <div class="calculator-container">
+        <!-- 上部分：四个日期的象限 -->
+        <div class="quadrant-grid">
+            <!-- 第一象限：当前日期 -->
+            <div class="quadrant-item q1">
+                <div class="quadrant-label">当前日期</div>
+                <div id="current-date" class="quadrant-value">2025-12-25</div>
             </div>
             
-            <!-- 超三日期 -->
-            <div class="date-display-item">
-                <div class="date-label">超三日期</div>
-                <div id="tertiary-date-display" class="date-value tertiary">2025年12月20日</div>
+            <!-- 第二象限：超三日期 -->
+            <div class="quadrant-item q2">
+                <div class="quadrant-label">超三日期</div>
+                <div id="tertiary-date" class="quadrant-value tertiary">2025-12-15</div>
+            </div>
+            
+            <!-- 第三象限：到期日期 -->
+            <div class="quadrant-item q3">
+                <div class="quadrant-label">到期日期</div>
+                <div id="expiry-date" class="quadrant-value">2026-01-09</div>
+            </div>
+            
+            <!-- 第四象限：贴签日期 -->
+            <div class="quadrant-item q4">
+                <div class="quadrant-label">贴签日期</div>
+                <div id="reminder-date" class="quadrant-value">2026-01-08</div>
             </div>
         </div>
 
-        <!-- 输入区域 -->
-        <div class="input-container">
+        <!-- 下部分：输入区域 -->
+        <div class="input-section">
             <!-- 生产日期 -->
-            <div class="input-item">
-                <label for="production-date" class="input-label">生产日期</label>
-                <div class="input-wrapper">
-                    <input type="date" id="production-date" class="date-input" value="2025-11-25">
-                </div>
+            <div class="input-row">
+                <label for="production-date">生产日期</label>
+                <input type="date" id="production-date" value="2025-12-25">
             </div>
             
             <!-- 保质期 -->
-            <div class="input-item">
-                <label for="shelf-life" class="input-label">保质期（天）</label>
-                <div class="input-wrapper">
-                    <input type="number" id="shelf-life" class="number-input" value="15" min="1" max="9999">
-                    <span class="unit-text">天</span>
+            <div class="input-row">
+                <label for="shelf-life">保质期（天）</label>
+                <div class="shelf-life-control">
+                    <input type="number" id="shelf-life" value="15" min="1" max="9999">
+                    <div class="quick-days">
+                        <button data-days="15">15天</button>
+                        <button data-days="30">30天</button>
+                        <button data-days="90">90天</button>
+                        <button data-days="180">半年</button>
+                        <button data-days="365">1年</button>
+                        <button data-days="730">2年</button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- 结果区域 -->
-        <div class="result-container">
-            <!-- 到期日期 -->
-            <div class="result-item">
-                <div class="result-label">到期日期</div>
-                <div id="expiry-date" class="result-value">2025年12月10日</div>
-            </div>
-            
-            <!-- 贴签日期 -->
-            <div class="result-item">
-                <div class="result-label">贴签日期</div>
-                <div id="reminder-date" class="result-value">2025年12月9日</div>
-            </div>
-        </div>
-
-        <!-- 快捷按钮区域 -->
-        <div class="quick-buttons-container">
-            <div class="buttons-row">
-                <button class="quick-button" data-days="15">15天</button>
-                <button class="quick-button" data-days="30">30天</button>
-                <button class="quick-button" data-days="90">90天</button>
-            </div>
-            <div class="buttons-row">
-                <button class="quick-button" data-days="180">半年</button>
-                <button class="quick-button" data-days="365">1年</button>
-                <button class="quick-button" data-days="730">2年</button>
-            </div>
-        </div>
-
-        <!-- 页脚 -->
-        <div class="footer">
-            <p class="copyright">© 2025 到期计算器</p>
         </div>
     </div>
 
