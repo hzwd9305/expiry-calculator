@@ -1,130 +1,264 @@
-/* 全局样式重置 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* 基础设置：保证移动端适配 */
-html {
-    font-size: 16px;
-}
 body {
-    background-color: #ffffff;
-    padding: 16px;
-    color: #333333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f8f9fa;
+    color: #333;
+    line-height: 1.4;
+    padding: 15px;
+    font-size: 14px;
+    min-height: 100vh;
 }
 
-/* 容器：限制最大宽度，全端居中 */
-.wrapper {
+.container {
     max-width: 500px;
-    width: 100%;
     margin: 0 auto;
+    width: 100%;
 }
 
-/* 标题区域 */
-.header {
+/* 头部 */
+header {
     text-align: center;
     margin-bottom: 20px;
-}
-.main-title {
-    font-size: clamp(22px, 6vw, 28px);
-    font-weight: 600;
-    color: #222222;
-    margin-bottom: 4px;
-}
-.sub-title {
-    font-size: clamp(12px, 3vw, 14px);
-    color: #888888;
+    padding: 10px 0;
 }
 
-/* 日期卡片容器：强制2列，全端统一 */
-.card-container {
+h1 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+}
+
+/* 四宫格 */
+.four-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 25px;
 }
 
-/* 单个卡片：保证宽度，文字不换行 */
-.date-card {
-    background-color: #f9f9f9;
+.grid-item {
+    background: white;
+    border: 1px solid #e9ecef;
     border-radius: 8px;
-    padding: 12px 8px;
+    padding: 15px;
     text-align: center;
-    min-width: 140px;
-}
-.card-label {
-    font-size: clamp(12px, 3vw, 14px);
-    color: #666666;
-    margin-bottom: 6px;
-}
-.card-value {
-    font-size: clamp(16px, 4vw, 18px);
-    font-weight: 500;
-    white-space: nowrap; /* 强制文字不换行 */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* 卡片文字颜色 */
-.current { color: #222222; }
-.over-three { color: #e53e3e; }
-.expiry { color: #9c27b0; }
-.label { color: #2196f3; }
+.grid-title {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.grid-date {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    min-height: 24px;
+}
+
+/* 特殊日期颜色 */
+.grid-date.tertiary {
+    color: #dc3545;
+}
+
+.grid-date.expiry {
+    color: #6a11cb;
+}
+
+.grid-date.reminder {
+    color: #2575fc;
+}
 
 /* 输入区域 */
-.input-container {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 16px;
+.input-section {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     margin-bottom: 20px;
 }
-.input-item {
-    margin-bottom: 12px;
+
+.input-group {
+    margin-bottom: 25px;
 }
-.input-label {
+
+.input-group:last-child {
+    margin-bottom: 0;
+}
+
+label {
     display: block;
-    font-size: clamp(12px, 3vw, 14px);
-    color: #333333;
-    margin-bottom: 6px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
 }
-.form-input {
+
+.date-input,
+.number-input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #e0e0e0;
+    padding: 12px;
+    border: 1px solid #ddd;
     border-radius: 6px;
-    font-size: clamp(14px, 3vw, 16px);
-    background-color: #ffffff;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: 10px;
 }
-.form-input:focus {
+
+.date-input:focus,
+.number-input:focus {
     outline: none;
-    border-color: #ddd;
+    border-color: #6a11cb;
+    box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.1);
 }
 
-/* 快捷按钮 */
-.btn-row {
+/* 常用按钮 */
+.quick-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 6px;
-}
-.quick-btn {
-    padding: 10px 0;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    background-color: #ffffff;
-    font-size: clamp(12px, 3vw, 14px);
-    color: #333333;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-.quick-btn:hover {
-    background-color: #f5f5f5;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 10px;
 }
 
-/* 版权信息 */
-.copyright {
+.quick-btn {
+    padding: 10px 6px;
+    border: 1px solid #e0e0e0;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #444;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quick-btn:hover {
+    background: #e9ecef;
+    border-color: #6a11cb;
+    color: #6a11cb;
+}
+
+.quick-btn:active {
+    transform: scale(0.98);
+}
+
+/* 页脚 */
+footer {
     text-align: center;
-    font-size: clamp(10px, 2vw, 12px);
-    color: #999999;
+    margin-top: 20px;
+    padding: 15px;
+    color: #95a5a6;
+    font-size: 0.85rem;
+}
+
+/* 手机端优化 */
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .four-grid {
+        gap: 8px;
+    }
+    
+    .grid-item {
+        padding: 12px 8px;
+        min-height: 70px;
+    }
+    
+    .grid-title {
+        font-size: 0.85rem;
+    }
+    
+    .grid-date {
+        font-size: 1rem;
+    }
+    
+    .input-section {
+        padding: 15px;
+    }
+    
+    .date-input,
+    .number-input {
+        padding: 10px;
+        font-size: 15px;
+    }
+    
+    .quick-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .quick-btn {
+        padding: 10px 4px;
+        font-size: 0.85rem;
+    }
+}
+
+/* 电脑端优化 */
+@media (min-width: 769px) {
+    body {
+        padding: 20px;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    
+    .container {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    
+    .four-grid {
+        gap: 12px;
+    }
+    
+    .grid-item {
+        padding: 18px;
+        min-height: 90px;
+    }
+    
+    .grid-date {
+        font-size: 1.2rem;
+    }
+    
+    .input-section {
+        padding: 22px;
+    }
+    
+    .date-input,
+    .number-input {
+        padding: 14px;
+    }
+    
+    .quick-buttons {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    
+    .quick-btn {
+        padding: 12px 8px;
+        font-size: 0.95rem;
+    }
 }
