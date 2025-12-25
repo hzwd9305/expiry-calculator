@@ -3,58 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="到期计算器">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6a11cb">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
+    <meta name="description" content="到期日期计算器 - 精准计算到期日期">
     <title>到期计算器</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 弹窗样式 */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            display: none;
+        }
+        
+        .alert-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 320px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .alert-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .alert-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .alert-message {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .alert-btn {
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        
+        .alert-btn:hover {
+            background: #5a0db3;
+        }
+        
+        /* 不同状态的弹窗颜色 */
+        .alert-box.expired .alert-icon { color: #dc3545; }
+        .alert-box.tertiary_just .alert-icon { color: #ff9800; }
+        .alert-box.tertiary_expired .alert-icon { color: #dc3545; }
+        .alert-box.large .alert-icon { color: #2196f3; }
+    </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <h1 class="main-title">到期计算器</h1>
-            <p class="sub-title">支持闰年月计算</p>
-        </div>
-
-        <div class="card-container">
-            <div class="date-card">
-                <div class="card-label">当前日期</div>
-                <div class="card-value current" id="currentDate">2025年11月25日</div>
-            </div>
-            <div class="date-card">
-                <div class="card-label">超三日期</div>
-                <div class="card-value over-three" id="overThreeDate">2025年7月25日</div>
-            </div>
-            <div class="date-card">
-                <div class="card-label">到期日期</div>
-                <div class="card-value expiry" id="expiryDate">2026年11月25日</div>
-            </div>
-            <div class="date-card">
-                <div class="card-label">贴签日期</div>
-                <div class="card-value label" id="labelDate">2026年11月24日</div>
+    <div class="container">
+        <!-- 弹窗 -->
+        <div id="alert-overlay" class="alert-overlay">
+            <div id="alert-box" class="alert-box">
+                <div id="alert-icon" class="alert-icon">⚠️</div>
+                <div id="alert-title" class="alert-title">提示</div>
+                <div id="alert-message" class="alert-message"></div>
+                <button id="alert-btn" class="alert-btn">我知道了</button>
             </div>
         </div>
 
-        <div class="input-container">
-            <div class="input-item">
-                <label class="input-label">生产日期</label>
-                <input type="date" class="form-input" id="productionDate" value="2025-11-25">
+        <!-- 顶部标题 -->
+        <header>
+            <h1>到期计算器</h1>
+            <p class="subtitle">支持闰年月计算</p>
+        </header>
+
+        <!-- 四宫格日期显示 -->
+        <div class="four-grid">
+            <!-- 当前日期 -->
+            <div class="grid-item">
+                <div class="grid-title">当前日期</div>
+                <div class="grid-date" id="current-date">--</div>
             </div>
-            <div class="input-item">
-                <label class="input-label">保质期（天）</label>
-                <input type="number" class="form-input" id="shelfLife" value="360" min="1">
+            
+            <!-- 超三日期 -->
+            <div class="grid-item">
+                <div class="grid-title">超三日期</div>
+                <div class="grid-date tertiary" id="tertiary-date">--</div>
             </div>
-            <!-- 快捷按钮（按天，示例：360天=12个月） -->
-            <div class="btn-row">
-                <button class="quick-btn" onclick="setShelfLife(30)">30天</button>
-                <button class="quick-btn" onclick="setShelfLife(90)">90天</button>
-                <button class="quick-btn" onclick="setShelfLife(180)">180天</button>
+            
+            <!-- 到期日期 -->
+            <div class="grid-item">
+                <div class="grid-title">到期日期</div>
+                <div class="grid-date expiry" id="expiry-date">--</div>
             </div>
-            <div class="btn-row">
-                <button class="quick-btn" onclick="setShelfLife(360)">360天</button>
-                <button class="quick-btn" onclick="setShelfLife(720)">720天</button>
-                <button class="quick-btn" onclick="setShelfLife(1080)">1080天</button>
+            
+            <!-- 贴签日期 -->
+            <div class="grid-item">
+                <div class="grid-title">贴签日期</div>
+                <div class="grid-date reminder" id="reminder-date">--</div>
             </div>
         </div>
 
-        <div class="copyright">© 2025 到期计算器</div>
+        <!-- 输入区域 -->
+        <div class="input-section">
+            <!-- 生产日期 -->
+            <div class="input-group">
+                <label for="production-date">生产日期</label>
+                <input type="date" id="production-date" class="date-input">
+            </div>
+
+            <!-- 保质期 -->
+            <div class="input-group">
+                <label for="shelf-life">保质期（天）</label>
+                <input type="number" id="shelf-life" value="365" min="1" max="9999" class="number-input">
+                
+                <!-- 常用按钮 -->
+                <div class="quick-buttons">
+                    <button class="quick-btn" data-days="15">15天</button>
+                    <button class="quick-btn" data-days="30">30天</button>
+                    <button class="quick-btn" data-days="90">90天</button>
+                    <button class="quick-btn" data-days="180">半年</button>
+                    <button class="quick-btn" data-days="365">1年</button>
+                    <button class="quick-btn" data-days="730">2年</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer>
+            <p>© <span id="current-year"></span> 到期计算器</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>
