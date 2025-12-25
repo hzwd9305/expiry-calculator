@@ -2,7 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 核心视口标签：完全适配移动端 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- 防止电话号码等被自动识别 -->
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
     
     <!-- PWA 优化 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,18 +17,22 @@
     <!-- 图标 -->
     <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
     <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
-    
-    <!-- 启动画面 -->
     <link rel="apple-touch-startup-image" href="https://img.icons8.com/color/512/000000/calculator--v1.png">
     
     <!-- Web App Manifest -->
     <link rel="manifest" href="manifest.json">
     
     <!-- 网站信息 -->
-    <meta name="description" content="输入生产日期和保质期天数，精准计算到期日期">
+    <meta name="description" content="输入生产日期和保质期天数，精准计算到期日期及提前提醒日">
     
     <title>到期计算器</title>
     <link rel="stylesheet" href="style.css">
+    <!-- 禁止iOS点击高亮 -->
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -51,7 +58,7 @@
                         </label>
                         <div class="number-input-container">
                             <input type="number" id="shelf-life" value="365" min="1" max="9999" 
-                                   class="number-input" placeholder="输入天数">
+                                   class="number-input" placeholder="输入天数" inputmode="decimal">
                             <span class="unit">天</span>
                         </div>
                         <div class="quick-tips">
@@ -85,6 +92,11 @@
                         <span>到期日期：</span>
                         <span id="expiry-date" class="highlight">--</span>
                     </div>
+                    <!-- 新增：提醒日期行 -->
+                    <div class="result-item reminder">
+                        <span>提醒日期 (提前1天)：</span>
+                        <span id="reminder-date" class="reminder">--</span>
+                    </div>
                 </div>
                 
                 <!-- 错误提示区域 -->
@@ -97,8 +109,8 @@
                 <ul>
                     <li>输入生产日期（默认30天前）</li>
                     <li>输入保质期天数（支持小数）</li>
-                    <li>点击"计算到期日期"</li>
-                    <li>结果自动格式化显示</li>
+                    <li>点击“计算到期日期”</li>
+                    <li>“提醒日期”为到期日的前一天</li>
                 </ul>
             </div>
         </main>
