@@ -1,7 +1,7 @@
 /**
- * 格式化日期为「年」月「日」日格式，兼容闰年月
+ * 格式化日期：年-月-日
  * @param {Date} date 日期对象
- * @returns {string} 格式化后的日期字符串
+ * @returns {string} 格式化字符串
  */
 function formatDate(date) {
     const year = date.getFullYear();
@@ -11,7 +11,7 @@ function formatDate(date) {
 }
 
 /**
- * 初始化当前日期显示
+ * 初始化当前日期
  */
 function initCurrentDate() {
     const now = new Date();
@@ -19,7 +19,7 @@ function initCurrentDate() {
 }
 
 /**
- * 快捷设置保质期（按天）
+ * 快捷设置保质期（仅赋值天数，无换算）
  * @param {number} days 保质期天数
  */
 function setShelfLife(days) {
@@ -28,10 +28,13 @@ function setShelfLife(days) {
 }
 
 /**
- * 核心计算逻辑：输入天数自动换算月数（1月=30天），超三日期按月份计算
+ * 核心计算逻辑（最终版）：
+ * 1. 到期日期 = 生产日期 + 保质期（天）
+ * 2. 超三日期 = 当前日期 - (保质期天数/30/3) 个月
+ * 3. 贴签日期 = 到期日期 - 1天
  */
 function calculateDates() {
-    // 1. 获取输入值（保质期为天数）
+    // 1. 获取输入（仅天数）
     const productionDate = new Date(document.getElementById('productionDate').value);
     const shelfLifeDays = Number(document.getElementById('shelfLife').value);
     const currentDate = new Date();
@@ -41,35 +44,33 @@ function calculateDates() {
         return;
     }
 
-    // 3. 天数转月数（1月=30天，保留小数）
-    const shelfLifeMonths = shelfLifeDays / 30;
-
-    // 4. 计算到期日期：生产日期 + 保质期天数（兼容闰年月）
+    // 3. 到期日期：生产日期 + 保质期（天）【核心修正：按天计算】
     const expiryDate = new Date(productionDate);
     expiryDate.setDate(expiryDate.getDate() + shelfLifeDays);
 
-    // 5. 计算超三日期：当前日期 - (保质期月数 ÷ 3)
-    const overThreeMonths = shelfLifeMonths / 3;
+    // 4. 超三日期：当前日期 - (保质期天数 ÷ 30 ÷ 3) 个月【仅此处转月】
+    const shelfLifeMonths = shelfLifeDays / 30; // 天数转月（1月=30天）
+    const overThreeMonths = shelfLifeMonths / 3; // 超三月份数
     const overThreeDate = new Date(currentDate);
     overThreeDate.setMonth(overThreeDate.getMonth() - overThreeMonths);
 
-    // 6. 计算贴签日期：到期日期 - 1天
+    // 5. 贴签日期：到期日期 - 1天
     const labelDate = new Date(expiryDate);
     labelDate.setDate(labelDate.getDate() - 1);
 
-    // 7. 更新页面显示
+    // 6. 更新显示
     document.getElementById('overThreeDate').textContent = formatDate(overThreeDate);
     document.getElementById('expiryDate').textContent = formatDate(expiryDate);
     document.getElementById('labelDate').textContent = formatDate(labelDate);
 }
 
 /**
- * 页面加载完成后初始化
+ * 页面初始化
  */
 window.onload = function() {
     initCurrentDate();
-    calculateDates(); // 初始计算
-    // 监听输入变化，实时重新计算
+    calculateDates();
+    // 监听输入变化
     document.getElementById('productionDate').addEventListener('change', calculateDates);
     document.getElementById('shelfLife').addEventListener('input', calculateDates);
 };
