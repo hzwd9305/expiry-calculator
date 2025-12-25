@@ -19,7 +19,6 @@ function initializePage() {
 
     } catch (error) {
         console.error('初始化错误:', error);
-        alert('页面加载失败，请刷新');
     }
 }
 
