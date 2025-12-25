@@ -1,3 +1,4 @@
+// 保持和之前完全相同的JavaScript代码
 // ==================== 初始化 ====================
 function initializePage() {
     try {
@@ -29,7 +30,6 @@ function initializePage() {
 
 // ==================== 日期格式化函数 ====================
 function formatDateForInput(date) {
-    // 格式：YYYY-MM-DD 用于input[type="date"]
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -56,10 +56,8 @@ function updateCurrentDate() {
 
 // ==================== 自动计算设置 ====================
 function setupAutoCalculate() {
-    // 生产日期变化时计算
     document.getElementById('production-date').addEventListener('change', performCalculation);
     
-    // 保质期输入时实时计算（防抖动）
     let calculationTimer;
     document.getElementById('shelf-life').addEventListener('input', function() {
         clearTimeout(calculationTimer);
@@ -69,7 +67,7 @@ function setupAutoCalculate() {
 
 // ==================== 快捷按钮设置 ====================
 function setupQuickButtons() {
-    const quickButtons = document.querySelectorAll('.quick-btn');
+    const quickButtons = document.querySelectorAll('.quick-button');
     quickButtons.forEach(button => {
         button.addEventListener('click', function() {
             const days = parseInt(this.getAttribute('data-days'));
@@ -88,7 +86,7 @@ function performCalculation() {
         const productionDateStr = document.getElementById('production-date').value;
         const shelfLifeInput = document.getElementById('shelf-life').value;
         
-        // 2. 验证保质期输入（超三日期需要这个）
+        // 2. 验证保质期
         const shelfLife = parseFloat(shelfLifeInput);
         const hasValidShelfLife = !isNaN(shelfLife) && shelfLife > 0 && shelfLife <= 9999;
         
@@ -102,7 +100,7 @@ function performCalculation() {
             document.getElementById('tertiary-date-display').textContent = '--';
         }
         
-        // 4. 验证生产日期（到期日期和贴签日期需要这个）
+        // 4. 验证生产日期
         if (!productionDateStr) {
             document.getElementById('expiry-date').textContent = '--';
             document.getElementById('reminder-date').textContent = '--';
@@ -126,17 +124,16 @@ function performCalculation() {
         const expiryDate = new Date(productionDate);
         expiryDate.setDate(productionDate.getDate() + Math.floor(shelfLife));
         
-        // 处理小数天数
         const decimalPart = shelfLife - Math.floor(shelfLife);
         if (decimalPart > 0) {
             expiryDate.setHours(expiryDate.getHours() + Math.round(decimalPart * 24));
         }
         
-        // 6. 计算贴签日（到期日前1天）
+        // 6. 计算贴签日
         const reminderDate = new Date(expiryDate);
         reminderDate.setDate(reminderDate.getDate() - 1);
         
-        // 7. 更新到期日期和贴签日期显示
+        // 7. 更新显示
         document.getElementById('expiry-date').textContent = safeFormatDate(expiryDate);
         document.getElementById('reminder-date').textContent = safeFormatDate(reminderDate);
         
@@ -151,6 +148,5 @@ function performCalculation() {
 // ==================== 页面加载 ====================
 document.addEventListener('DOMContentLoaded', function() {
     initializePage();
-    // 每分钟更新一次当前日期
     setInterval(updateCurrentDate, 60000);
 });
