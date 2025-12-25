@@ -1,274 +1,238 @@
+/* 重置样式 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
 }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-    padding: 20px;
-    color: #333;
-    line-height: 1.5;
-}
-
-.container {
-    max-width: 500px;
+/* 整体容器 */
+.app-container {
+    max-width: 400px;
     margin: 0 auto;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: #333;
 }
 
-/* ===== 头部 ===== */
-header {
+/* 顶部标题 */
+.header-area {
     text-align: center;
-    padding: 25px 20px 20px;
-    background: linear-gradient(to right, #6a11cb, #2575fc);
-    color: white;
-    border-radius: 20px 20px 0 0;
+    margin-bottom: 25px;
+    padding-top: 10px;
 }
 
-header h1 {
-    font-size: 2em;
-    margin-bottom: 5px;
+.main-title {
+    font-size: 24px;
     font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: #2c3e50;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
 }
 
-.subtitle {
-    font-size: 0.9em;
-    opacity: 0.9;
+.sub-title {
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: 400;
+}
+
+/* 日期显示区域 */
+.date-display-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eaeaea;
 }
 
-/* 顶部日期显示区 */
-.date-display-area {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 15px;
-    padding: 15px;
-    margin-top: 10px;
-    backdrop-filter: blur(10px);
-}
-
-.date-display-row {
+.date-display-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 12px 0;
 }
 
-.date-display-row:first-child {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+.date-display-item:first-child {
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .date-label {
-    font-size: 1em;
+    font-size: 16px;
     font-weight: 500;
-}
-
-.tertiary-label {
-    color: #ffcc00;
+    color: #555;
 }
 
 .date-value {
-    font-size: 1.1em;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
 }
 
-.tertiary-value {
-    color: #ffcc00;
+.date-value.tertiary {
+    color: #e74c3c;
 }
 
-/* ===== 卡片通用样式 ===== */
-.calculator-card {
-    margin: 20px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-}
-
-/* 输入卡片 */
-.input-card {
+/* 输入区域 */
+.input-container {
     background: white;
+    border-radius: 12px;
+    padding: 25px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eaeaea;
 }
 
-.input-section {
-    padding: 25px;
-}
-
-.input-group {
+.input-item {
     margin-bottom: 25px;
 }
 
-.input-group:last-child {
+.input-item:last-child {
     margin-bottom: 0;
 }
 
-.input-group label {
+.input-label {
     display: block;
-    font-weight: 600;
-    color: #444;
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
     margin-bottom: 10px;
-    font-size: 1.05em;
 }
 
-/* 输入框 */
-.date-input, .number-input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    font-size: 1.1em;
-    transition: all 0.3s;
-    font-family: inherit;
-}
-
-.date-input:focus, .number-input:focus {
-    border-color: #6a11cb;
-    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
-    outline: none;
-    transform: translateY(-2px);
-}
-
-.number-input-container {
+.input-wrapper {
     position: relative;
 }
 
-.number-input-container .unit {
+.date-input, .number-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 15px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    background: #fcfcfc;
+    transition: border-color 0.2s;
+}
+
+.date-input:focus, .number-input:focus {
+    border-color: #3498db;
+    outline: none;
+    background: white;
+}
+
+.unit-text {
     position: absolute;
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #666;
-    font-weight: 500;
-    font-size: 1em;
+    color: #777;
+    font-size: 16px;
 }
 
-/* 结果卡片 */
-.result-card {
-    background: linear-gradient(to right, #34a853, #2ecc71);
-    color: white;
+/* 结果区域 */
+.result-container {
+    background: white;
+    border-radius: 12px;
+    padding: 25px 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eaeaea;
 }
 
-.result-section {
-    padding: 25px;
-}
-
-.result-row {
+.result-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 14px 0;
 }
 
-.result-row:first-child {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+.result-item:first-child {
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .result-label {
-    font-size: 1.05em;
+    font-size: 16px;
     font-weight: 500;
-    opacity: 0.9;
+    color: #555;
 }
 
 .result-value {
-    font-size: 1.2em;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
 }
 
-/* ===== 快捷按钮区 ===== */
-.quick-buttons-section {
-    padding: 0 20px 25px;
+/* 快捷按钮区域 */
+.quick-buttons-container {
+    margin-bottom: 25px;
 }
 
-.quick-buttons-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+.buttons-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
     gap: 12px;
 }
 
-.quick-btn {
-    padding: 15px 10px;
+.buttons-row:last-child {
+    margin-bottom: 0;
+}
+
+.quick-button {
+    flex: 1;
+    height: 50px;
     border: none;
-    border-radius: 12px;
-    background: #f0f4f8;
-    color: #2c3e50;
-    font-size: 1em;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #6c5ce7, #a29bfe);
+    color: white;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
+    box-shadow: 0 3px 6px rgba(108, 92, 231, 0.2);
     font-family: inherit;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-.quick-btn:hover {
-    background: #e3e8f0;
+.quick-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 10px rgba(108, 92, 231, 0.3);
 }
 
-.quick-btn:active {
+.quick-button:active {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(108, 92, 231, 0.2);
 }
 
-/* ===== 页脚 ===== */
-footer {
+/* 页脚 */
+.footer {
     text-align: center;
-    padding: 20px;
-    color: #7f8c8d;
-    font-size: 0.9em;
-    background: #f8f9fa;
-    border-radius: 0 0 20px 20px;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
 }
 
-/* ===== 响应式设计 ===== */
-@media (max-width: 768px) {
-    body {
+.copyright {
+    font-size: 14px;
+    color: #95a5a6;
+}
+
+/* 响应式调整 */
+@media (max-width: 420px) {
+    .app-container {
         padding: 15px;
     }
     
-    header {
-        padding: 20px 15px 15px;
+    .date-display-container,
+    .input-container,
+    .result-container {
+        padding: 20px 15px;
     }
     
-    header h1 {
-        font-size: 1.7em;
-    }
-    
-    .date-display-area {
-        padding: 12px;
-    }
-    
-    .input-section, .result-section {
-        padding: 20px;
-    }
-    
-    .quick-buttons-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .quick-btn {
-        padding: 14px 8px;
-        font-size: 0.95em;
-    }
-}
-
-@media (max-width: 480px) {
-    .quick-buttons-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .date-input, .number-input {
-        padding: 13px;
-        font-size: 1em;
-    }
-    
-    .result-value {
-        font-size: 1.1em;
+    .quick-button {
+        height: 46px;
+        font-size: 15px;
     }
 }
