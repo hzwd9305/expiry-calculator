@@ -6,11 +6,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeCalculator() {
-    // 只更新当前日期，生产日期保持空白
+    // 只更新当前日期
     updateCurrentDate();
     
     // 保质期默认15天
     document.getElementById('shelf-life').value = 15;
+    
+    // 生产日期保持空白，不设置默认值
+    // 注意：这里不设置生产日期的值
     
     // 绑定事件
     setupEventListeners();
