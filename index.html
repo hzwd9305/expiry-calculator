@@ -20,23 +20,60 @@
         <header>
             <h1>到期日期计算器</h1>
             <p class="subtitle">支持闰年月精确计算</p>
-            
-            <!-- 顶部日期行：当前日期 + 超三日期 -->
-            <div class="top-date-row">
-                <div class="current-date">
-                    <span class="date-label">当前日期：</span>
-                    <span id="current-date-display">--</span>
-                </div>
-                <div class="tertiary-date">
-                    <span class="date-label tertiary">超三日期：</span>
-                    <span id="tertiary-date-display" class="tertiary-value">--</span>
-                    <small class="tertiary-hint">当前日期 - (保质期 ÷ 3)</small>
-                </div>
-            </div>
         </header>
 
+        <!-- 顶部日期显示区域 -->
+        <div class="date-display-section">
+            <!-- 第一行：当前日期 + 超三日期 -->
+            <div class="date-row">
+                <div class="date-box current-box">
+                    <div class="date-header">
+                        <span class="date-icon">📅</span>
+                        <span class="date-title">当前日期</span>
+                    </div>
+                    <div class="date-value" id="current-date-display">--</div>
+                </div>
+                
+                <div class="date-box tertiary-box">
+                    <div class="date-header">
+                        <span class="date-icon">⚠️</span>
+                        <span class="date-title">超三日期</span>
+                    </div>
+                    <div class="date-value tertiary-value" id="tertiary-date-display">--</div>
+                    <div class="date-formula">当前日期 - (保质期 ÷ 3)</div>
+                </div>
+            </div>
+            
+            <!-- 第二行：到期日期 + 贴签日期 -->
+            <div class="date-row">
+                <div class="date-box expiry-box">
+                    <div class="date-header">
+                        <span class="date-icon">⏰</span>
+                        <span class="date-title">到期日期</span>
+                    </div>
+                    <div class="date-value highlight" id="expiry-date">--</div>
+                    <div class="date-formula">生产日期 + 保质期</div>
+                </div>
+                
+                <div class="date-box reminder-box">
+                    <div class="date-header">
+                        <span class="date-icon">🏷️</span>
+                        <span class="date-title">贴签日期</span>
+                    </div>
+                    <div class="date-value reminder" id="reminder-date">--</div>
+                    <div class="date-formula">到期日期 - 1天</div>
+                </div>
+            </div>
+            
+            <!-- 闰年提示 -->
+            <div class="leap-year-note" id="leap-year-note">
+                <span class="leap-icon">🌙</span>
+                <span>计算已考虑闰年月因素</span>
+            </div>
+        </div>
+
         <main>
-            <!-- 第一个框：输入框 -->
+            <!-- 输入区域 -->
             <div class="calculator-card input-card">
                 <h3><span class="input-icon">📝</span> 输入信息</h3>
                 
@@ -53,91 +90,30 @@
                         保质期（天数）
                     </label>
                     
-                    <!-- 带下拉选择的自定义输入容器 -->
-                    <div class="custom-input-container">
-                        <div class="input-with-dropdown">
-                            <input type="number" id="shelf-life" value="365" min="1" max="9999"
-                                   class="number-input" placeholder="输入保质期天数" inputmode="decimal">
-                            <span class="unit">天</span>
-                            <button type="button" class="dropdown-toggle" id="shelf-life-dropdown-toggle">
-                                <span class="dropdown-arrow">▼</span>
-                            </button>
-                        </div>
-                        
-                        <!-- 下拉面板 -->
-                        <div class="dropdown-panel" id="shelf-life-dropdown-panel">
-                            <div class="dropdown-header">
-                                <span>快速选择</span>
-                            </div>
-                            
-                            <!-- 常用日期按钮 -->
-                            <div class="quick-selection-buttons">
-                                <button type="button" class="quick-btn" data-days="15">15天</button>
-                                <button type="button" class="quick-btn" data-days="30">30天</button>
-                                <button type="button" class="quick-btn" data-days="90">90天</button>
-                                <button type="button" class="quick-btn" data-days="180">半年(180天)</button>
-                                <button type="button" class="quick-btn" data-days="365">1年(365天)</button>
-                                <button type="button" class="quick-btn" data-days="730">2年(730天)</button>
-                            </div>
-                            
-                            <!-- 滑动选择器 -->
-                            <div class="slider-section">
-                                <div class="slider-header">
-                                    <span>滑动选择</span>
-                                    <span class="slider-value-display" id="slider-value-display">365天</span>
-                                </div>
-                                <input type="range" id="shelf-life-slider" class="shelf-life-slider" 
-                                       min="1" max="999" value="365" step="1">
-                                <div class="slider-scale">
-                                    <span>1天</span>
-                                    <span>500天</span>
-                                    <span>999天</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 手动输入区 -->
-                            <div class="manual-input-section">
-                                <div class="input-with-buttons">
-                                    <input type="number" id="manual-input" class="manual-input" 
-                                           placeholder="手动输入天数" min="1" max="9999" value="365">
-                                    <button type="button" class="apply-btn" id="apply-manual-input">应用</button>
-                                </div>
-                                <div class="input-hint">
-                                    <small>可输入1-9999之间的天数</small>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- 简化版输入框 -->
+                    <div class="simple-input-container">
+                        <input type="number" id="shelf-life" value="365" min="1" max="9999"
+                               class="number-input" placeholder="输入保质期天数" inputmode="decimal">
+                        <span class="unit">天</span>
+                    </div>
+                    
+                    <!-- 常用日期按钮 -->
+                    <div class="quick-buttons-row">
+                        <button type="button" class="quick-btn" data-days="15">15天</button>
+                        <button type="button" class="quick-btn" data-days="30">30天</button>
+                        <button type="button" class="quick-btn" data-days="90">90天</button>
+                        <button type="button" class="quick-btn" data-days="180">半年</button>
+                        <button type="button" class="quick-btn" data-days="365">1年</button>
+                        <button type="button" class="quick-btn" data-days="730">2年</button>
                     </div>
                     
                     <div class="quick-tips-note">
-                        💡 支持手动输入、快速选择和滑动调节
+                        💡 输入天数或点击常用日期按钮
                     </div>
                 </div>
             </div>
 
-            <!-- 第二个框：结果框 -->
-            <div class="calculator-card result-card">
-                <h3><span class="result-icon">📊</span> 计算结果</h3>
-                
-                <div class="result-row">
-                    <div class="result-item">
-                        <span class="result-label">到期日期</span>
-                        <span id="expiry-date" class="result-value highlight">--</span>
-                        <small class="result-note">生产日期 + 保质期</small>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">贴签日期</span>
-                        <span id="reminder-date" class="result-value reminder">--</span>
-                        <small class="result-note">到期日期 - 1天</small>
-                    </div>
-                </div>
-                
-                <!-- 闰年提示 -->
-                <div class="leap-year-note" id="leap-year-note">
-                    <span class="leap-icon">🌙</span>
-                    <span>计算已考虑闰年月因素</span>
-                </div>
-            </div>
+            <!-- 已移除结果卡片 -->
         </main>
 
         <footer>
