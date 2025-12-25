@@ -19,44 +19,45 @@ function initCurrentDate() {
 }
 
 /**
- * 快捷设置保质期（天数转月数，1月≈30天）
+ * 快捷设置保质期（按天）
  * @param {number} days 保质期天数
  */
 function setShelfLife(days) {
-    // 天数转月数（1月=30天，向下取整）
-    const months = Math.floor(days / 30);
-    document.getElementById('shelfLife').value = months;
+    document.getElementById('shelfLife').value = days;
     calculateDates();
 }
 
 /**
- * 核心计算逻辑：超三日期按月份计算，兼容闰年月
+ * 核心计算逻辑：输入天数自动换算月数（1月=30天），超三日期按月份计算
  */
 function calculateDates() {
-    // 1. 获取输入值（保质期为月数）
+    // 1. 获取输入值（保质期为天数）
     const productionDate = new Date(document.getElementById('productionDate').value);
-    const shelfLifeMonths = Number(document.getElementById('shelfLife').value);
+    const shelfLifeDays = Number(document.getElementById('shelfLife').value);
     const currentDate = new Date();
 
     // 2. 输入校验
-    if (isNaN(productionDate.getTime()) || isNaN(shelfLifeMonths) || shelfLifeMonths < 1) {
+    if (isNaN(productionDate.getTime()) || isNaN(shelfLifeDays) || shelfLifeDays < 1) {
         return;
     }
 
-    // 3. 计算到期日期：生产日期 + 保质期月数
-    const expiryDate = new Date(productionDate);
-    expiryDate.setMonth(expiryDate.getMonth() + shelfLifeMonths);
+    // 3. 天数转月数（1月=30天，保留小数）
+    const shelfLifeMonths = shelfLifeDays / 30;
 
-    // 4. 计算超三日期：当前日期 - (保质期月数 ÷ 3)
+    // 4. 计算到期日期：生产日期 + 保质期天数（兼容闰年月）
+    const expiryDate = new Date(productionDate);
+    expiryDate.setDate(expiryDate.getDate() + shelfLifeDays);
+
+    // 5. 计算超三日期：当前日期 - (保质期月数 ÷ 3)
     const overThreeMonths = shelfLifeMonths / 3;
     const overThreeDate = new Date(currentDate);
     overThreeDate.setMonth(overThreeDate.getMonth() - overThreeMonths);
 
-    // 5. 计算贴签日期：到期日期 - 1天
+    // 6. 计算贴签日期：到期日期 - 1天
     const labelDate = new Date(expiryDate);
     labelDate.setDate(labelDate.getDate() - 1);
 
-    // 6. 更新页面显示
+    // 7. 更新页面显示
     document.getElementById('overThreeDate').textContent = formatDate(overThreeDate);
     document.getElementById('expiryDate').textContent = formatDate(expiryDate);
     document.getElementById('labelDate').textContent = formatDate(labelDate);
