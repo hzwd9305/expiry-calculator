@@ -15,7 +15,7 @@ function formatDate(date) {
  */
 function initCurrentDate() {
     const now = new Date();
-    document.querySelector('.card-value.current').textContent = formatDate(now);
+    document.getElementById('currentDate').textContent = formatDate(now);
 }
 
 /**
@@ -55,9 +55,9 @@ function calculateDates() {
     labelDate.setDate(labelDate.getDate() - 1);
 
     // 6. 更新页面显示
-    document.querySelector('.card-value.over-three').textContent = formatDate(overThreeDate);
-    document.querySelector('.card-value.expiry').textContent = formatDate(expiryDate);
-    document.querySelector('.card-value.label').textContent = formatDate(labelDate);
+    document.getElementById('overThreeDate').textContent = formatDate(overThreeDate);
+    document.getElementById('expiryDate').textContent = formatDate(expiryDate);
+    document.getElementById('labelDate').textContent = formatDate(labelDate);
 }
 
 /**
