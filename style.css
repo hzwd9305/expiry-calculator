@@ -3,455 +3,229 @@
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-}
-
-:root {
-    --primary-color: #6a11cb;
-    --secondary-color: #2575fc;
-    --success-color: #34a853;
-    --danger-color: #dc3545;
-    --warning-color: #ff9800;
-    --light-color: #f8f9fa;
-    --dark-color: #343a40;
-    --border-color: #e0e0e0;
-    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f8f9fa;
     color: #333;
-    line-height: 1.5;
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.4;
+    padding: 15px;
+    font-size: 14px;
 }
 
 .container {
     max-width: 500px;
     margin: 0 auto;
-    width: 100%;
 }
 
-/* ===== 头部 ===== */
+/* 头部 */
 header {
     text-align: center;
     margin-bottom: 20px;
-    padding: 15px 0;
+    padding: 10px 0;
 }
 
-header h1 {
-    font-size: 1.8rem;
-    margin-bottom: 8px;
+h1 {
+    font-size: 1.5rem;
     color: #2c3e50;
-    font-weight: 700;
+    margin-bottom: 5px;
+    font-weight: 600;
 }
 
 .subtitle {
-    color: #666;
-    font-size: 0.9rem;
-    font-style: italic;
+    color: #7f8c8d;
+    font-size: 0.85rem;
 }
 
-/* ===== 顶部日期显示区域 ===== */
-.date-display-section {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e9ecef;
-}
-
-.date-row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.date-row:last-child {
-    margin-bottom: 0;
-}
-
-.date-box {
-    flex: 1;
-    padding: 18px 15px;
-    border-radius: 12px;
-    background: var(--light-color);
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-    min-height: 120px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.date-box:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-/* 不同日期框的样式 */
-.current-box {
-    border-color: #4CAF50;
-    background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
-}
-
-.tertiary-box {
-    border-color: var(--danger-color);
-    background: linear-gradient(135deg, #ffebee, #ffcdd2);
-}
-
-.expiry-box {
-    border-color: var(--primary-color);
-    background: linear-gradient(135deg, #f3e5f5, #e1bee7);
-}
-
-.reminder-box {
-    border-color: var(--secondary-color);
-    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-}
-
-.date-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.date-icon {
-    font-size: 1.2rem;
-}
-
-.date-title {
-    font-weight: 600;
-    color: #555;
-    font-size: 0.95rem;
-}
-
-.date-value {
-    font-size: 1.3rem;
-    font-weight: 700;
-    text-align: center;
-    margin: 8px 0;
-    min-height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.date-value.highlight {
-    color: var(--primary-color);
-    font-size: 1.4rem;
-}
-
-.date-value.reminder {
-    color: var(--secondary-color);
-    font-size: 1.4rem;
-}
-
-.tertiary-value {
-    color: var(--danger-color) !important;
-    font-size: 1.4rem;
-}
-
-.date-formula {
-    font-size: 0.75rem;
-    color: #888;
-    text-align: center;
-    margin-top: 5px;
-    font-style: italic;
-    opacity: 0.8;
-}
-
-/* 闰年提示 */
-.leap-year-note {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px;
-    background: #e8f5e9;
-    border-radius: 8px;
-    border: 1px solid #c8e6c9;
-    color: #2e7d32;
-    font-size: 0.9rem;
-    margin-top: 15px;
-    display: none; /* 默认隐藏 */
-}
-
-.leap-year-note.show {
-    display: flex;
-}
-
-.leap-icon {
-    font-size: 1.1rem;
-}
-
-/* ===== 卡片通用样式 ===== */
-.calculator-card {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-}
-
-.input-card {
-    border-left: 5px solid var(--success-color);
-}
-
-.input-card h3 {
-    display: flex;
-    align-items: center;
+/* 四宫格 */
+.four-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 25px;
-    color: #444;
-    font-size: 1.3rem;
-    font-weight: 700;
 }
 
-.input-icon {
-    font-size: 1.3rem;
+.grid-item {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-/* ===== 输入区域 ===== */
+.grid-title {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.grid-date {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    min-height: 24px;
+}
+
+/* 特殊日期颜色 */
+.grid-date.tertiary {
+    color: #dc3545; /* 红色 - 超三日期 */
+}
+
+.grid-date.expiry {
+    color: #6a11cb; /* 紫色 - 到期日期 */
+}
+
+.grid-date.reminder {
+    color: #2575fc; /* 蓝色 - 贴签日期 */
+}
+
+/* 输入区域 */
+.input-section {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
 .input-group {
     margin-bottom: 25px;
 }
 
-.input-group label {
+.input-group:last-child {
+    margin-bottom: 0;
+}
+
+label {
     display: block;
     font-weight: 600;
     color: #444;
-    margin-bottom: 12px;
-    font-size: 1.05rem;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
 }
 
-.input-note {
-    display: block;
-    font-size: 0.85rem;
-    color: #888;
-    margin-top: 6px;
-    font-style: italic;
-}
-
-/* 日期输入框 */
-.date-input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: all 0.2s;
-    font-family: inherit;
-    background: white;
-    min-height: 50px;
-}
-
-.date-input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
-    outline: none;
-}
-
-/* 简化版输入容器 */
-.simple-input-container {
-    position: relative;
-    width: 100%;
-    margin-bottom: 15px;
-}
-
+.date-input,
 .number-input {
     width: 100%;
-    padding: 15px 60px 15px 15px;
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    font-size: 1.1rem;
-    transition: all 0.2s;
-    font-family: inherit;
-    background: white;
-    min-height: 50px;
-    -moz-appearance: textfield;
-    text-align: center;
-}
-
-.number-input::-webkit-outer-spin-button,
-.number-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.number-input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
-    outline: none;
-}
-
-.simple-input-container .unit {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-    font-weight: 500;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
     font-size: 1rem;
-    pointer-events: none;
+    font-family: inherit;
+    margin-bottom: 10px;
 }
 
-/* 常用日期按钮行 */
-.quick-buttons-row {
+.date-input:focus,
+.number-input:focus {
+    outline: none;
+    border-color: #6a11cb;
+    box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.1);
+}
+
+/* 常用按钮 */
+.quick-buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 15px;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 .quick-btn {
-    padding: 14px 10px;
-    background: var(--light-color);
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 500;
+    padding: 10px 6px;
+    border: 1px solid #e0e0e0;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.9rem;
     color: #444;
     cursor: pointer;
     transition: all 0.2s;
-    text-align: center;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.quick-btn:hover,
-.quick-btn:active {
+.quick-btn:hover {
     background: #e9ecef;
-    border-color: var(--primary-color);
-    color: var(--primary-color);
+    border-color: #6a11cb;
+    color: #6a11cb;
 }
 
-.quick-btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+.quick-btn:active {
+    transform: scale(0.98);
 }
 
-.quick-tips-note {
-    font-size: 0.9rem;
-    color: #888;
-    margin-top: 10px;
-    font-style: italic;
-    text-align: center;
-}
-
-/* ===== 页脚 ===== */
+/* 页脚 */
 footer {
     text-align: center;
-    margin-top: 30px;
-    padding: 20px;
-    color: #7f8c8d;
-    font-size: 0.9rem;
+    margin-top: 25px;
+    padding: 15px;
+    color: #95a5a6;
+    font-size: 0.85rem;
 }
 
-/* ===== 响应式：手机端 ===== */
-@media (max-width: 768px) {
+/* 手机端优化 */
+@media (max-width: 480px) {
     body {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .four-grid {
+        gap: 8px;
+    }
+    
+    .grid-item {
+        padding: 12px 8px;
+    }
+    
+    .grid-title {
+        font-size: 0.85rem;
+    }
+    
+    .grid-date {
+        font-size: 1rem;
+    }
+    
+    .input-section {
         padding: 15px;
-        font-size: 15px;
-    }
-    
-    .container {
-        max-width: 100%;
-    }
-    
-    header h1 {
-        font-size: 1.6rem;
-    }
-    
-    .date-display-section {
-        padding: 15px;
-        border-radius: 12px;
-    }
-    
-    .date-row {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .date-box {
-        min-height: 110px;
-        padding: 15px 12px;
-    }
-    
-    .date-value {
-        font-size: 1.2rem;
-        min-height: 28px;
-    }
-    
-    .date-value.highlight,
-    .date-value.reminder,
-    .tertiary-value {
-        font-size: 1.3rem;
-    }
-    
-    .calculator-card {
-        padding: 20px;
-        border-radius: 12px;
-    }
-    
-    .input-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 20px;
     }
     
     .date-input,
     .number-input {
-        padding: 12px;
-        font-size: 16px;
-        min-height: 48px;
+        padding: 10px;
+        font-size: 15px;
     }
     
-    .quick-buttons-row {
+    .quick-buttons {
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
     }
     
     .quick-btn {
-        padding: 12px 8px;
-        font-size: 0.9rem;
-        min-height: 45px;
-    }
-    
-    .leap-year-note {
-        font-size: 0.85rem;
-        padding: 10px;
-    }
-    
-    footer {
-        padding: 15px;
+        padding: 10px 4px;
         font-size: 0.85rem;
     }
 }
 
-/* ===== 电脑端优化 ===== */
+/* 电脑端优化 */
 @media (min-width: 769px) {
     body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 30px;
+        padding: 20px;
+        font-size: 15px;
     }
     
-    .container {
-        max-width: 550px;
-        width: 100%;
+    .four-grid {
+        gap: 15px;
     }
     
-    .calculator-card {
-        padding: 30px;
+    .grid-item {
+        padding: 20px;
+    }
+    
+    .grid-date {
+        font-size: 1.2rem;
+    }
+    
+    .input-section {
+        padding: 25px;
     }
 }
