@@ -1,173 +1,227 @@
+/* ========== 重置与全局 ========== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-text-size-adjust: 100%; /* 禁止字体缩放 */
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+html {
+    font-size: 16px;
+    height: 100%;
+    -webkit-overflow-scrolling: touch; /* 平滑滚动 */
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
     background: #f5f7fa;
     min-height: 100vh;
-    padding: 20px;
+    min-height: -webkit-fill-available; /* 适配iOS Safari */
+    padding: 5vw; /* 使用视口单位适配 */
     color: #333;
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-x: hidden;
 }
 
+/* 容器适配 */
 .container {
+    width: 100%;
     max-width: 500px;
     margin: 0 auto;
+    flex: 0 1 auto;
 }
 
-/* 头部 */
+/* ========== 头部 ========== */
 header {
     text-align: center;
-    margin-bottom: 30px;
-    padding: 20px 0;
+    margin-bottom: 6vw;
+    padding: 4vw 0;
 }
 
 header h1 {
-    font-size: 1.8rem;
-    margin-bottom: 8px;
+    font-size: clamp(1.5rem, 6vw, 1.8rem); /* 响应式字体 */
+    margin-bottom: 2vw;
     color: #2c3e50;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 header .subtitle {
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 4vw, 1rem);
     color: #7f8c8d;
 }
 
-/* 计算器卡片 */
+/* ========== 计算器卡片 ========== */
 .calculator-card {
     background: white;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 4vw;
+    padding: 6vw;
+    margin-bottom: 6vw;
+    box-shadow: 0 2vw 8vw rgba(0, 0, 0, 0.05);
+    width: 100%;
 }
 
-/* 输入区域 */
+/* ========== 输入区域 ========== */
 .input-area {
-    margin-bottom: 25px;
+    margin-bottom: 6vw;
 }
 
 .input-group {
-    margin-bottom: 25px;
+    margin-bottom: 6vw;
 }
 
 .input-group label {
     display: block;
     font-weight: 600;
     color: #444;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
+    margin-bottom: 3vw;
+    font-size: clamp(1rem, 4.5vw, 1.1rem);
 }
 
+/* 日期和数字输入框 - 全设备优化 */
 .date-input, .number-input {
     width: 100%;
-    padding: 14px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1.1rem;
+    padding: 4vw;
+    border: 0.5vw solid #e0e0e0;
+    border-radius: 3vw;
+    font-size: clamp(1rem, 4.5vw, 1.1rem);
     transition: all 0.3s;
     font-family: inherit;
+    background: #fff;
+    -webkit-appearance: none;
+    appearance: none;
+    min-height: 14vw; /* 确保触摸区域足够大 */
+}
+
+/* 优化iOS输入体验 */
+.date-input::-webkit-date-and-time-value {
+    text-align: left;
+    margin-left: 0;
+}
+.date-input::-webkit-calendar-picker-indicator {
+    transform: scale(1.3);
+    margin-right: 2vw;
+}
+
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .date-input:focus, .number-input:focus {
     border-color: #6a11cb;
-    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+    box-shadow: 0 0 0 1.5vw rgba(106, 17, 203, 0.1);
     outline: none;
 }
 
+/* 数字输入容器 */
 .number-input-container {
     position: relative;
+    width: 100%;
 }
 
 .number-input-container .unit {
     position: absolute;
-    right: 14px;
+    right: 4vw;
     top: 50%;
     transform: translateY(-50%);
     color: #666;
     font-weight: 500;
+    font-size: clamp(1rem, 4.5vw, 1.1rem);
 }
 
-/* 快捷按钮 */
+/* ========== 快捷按钮 ========== */
 .quick-tips {
-    margin-top: 12px;
+    margin-top: 4vw;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 2.5vw;
 }
 
 .quick-tips span {
     color: #666;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 3.8vw, 0.95rem);
+    white-space: nowrap;
 }
 
 .quick-btn {
-    padding: 8px 16px;
+    padding: 3vw 5vw;
     background: #f0f2f5;
-    border: 1px solid #d1d5da;
-    border-radius: 6px;
+    border: 0.3vw solid #d1d5da;
+    border-radius: 2.5vw;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 3.8vw, 0.9rem);
     color: #444;
     transition: all 0.2s;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    white-space: nowrap;
+    touch-action: manipulation; /* 优化触摸响应 */
 }
 
-.quick-btn:hover {
+.quick-btn:active, .quick-btn:hover {
     background: #6a11cb;
     color: white;
     border-color: #6a11cb;
+    transform: translateY(-0.5vw);
 }
 
-/* 计算按钮 */
+/* ========== 计算按钮 ========== */
 .calculate-btn {
     width: 100%;
-    padding: 16px;
+    padding: 5vw;
     background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 600;
+    border-radius: 3vw;
+    font-size: clamp(1rem, 4.5vw, 1.1rem);
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s;
-    margin-bottom: 25px;
-}
-
-.calculate-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(106, 17, 203, 0.25);
+    margin-bottom: 6vw;
+    touch-action: manipulation;
+    min-height: 16vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .calculate-btn:active {
-    transform: translateY(0);
+    transform: scale(0.98);
+    opacity: 0.9;
 }
 
-/* 结果区域 */
+/* ========== 结果区域 ========== */
 .result-area {
     background: #f8f9fa;
-    border-radius: 10px;
-    padding: 20px;
-    border-left: 4px solid #6a11cb;
+    border-radius: 4vw;
+    padding: 5vw;
+    border-left: 1.5vw solid #6a11cb;
+    width: 100%;
 }
 
 .result-area h3 {
-    margin-bottom: 18px;
+    margin-bottom: 5vw;
     color: #444;
-    font-size: 1.3rem;
-    font-weight: 600;
+    font-size: clamp(1.1rem, 5vw, 1.3rem);
+    font-weight: 700;
 }
 
 .result-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid #e9ecef;
+    padding: 3.5vw 0;
+    border-bottom: 0.3vw solid #e9ecef;
+    flex-wrap: wrap;
 }
 
 .result-item:last-child {
@@ -177,31 +231,59 @@ header .subtitle {
 .result-item span:first-child {
     font-weight: 600;
     color: #555;
+    font-size: clamp(0.95rem, 4.2vw, 1.05rem);
+    flex: 1;
+    min-width: 50%;
 }
 
+.result-item span:last-child {
+    font-size: clamp(0.95rem, 4.2vw, 1.05rem);
+    text-align: right;
+    flex: 1;
+    min-width: 50%;
+    word-break: break-word;
+}
+
+/* 到期日期高亮样式 */
 .result-item.highlight {
     background: rgba(106, 17, 203, 0.05);
-    margin: 0 -20px;
-    padding: 15px 20px;
-    border-radius: 8px;
+    margin: 0 -5vw;
+    padding: 4vw 5vw;
+    border-radius: 3vw;
 }
 
 .result-item .highlight {
     color: #6a11cb;
-    font-weight: 700;
-    font-size: 1.2rem;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 5vw, 1.3rem);
 }
 
-/* 错误提示 */
+/* 提醒日期样式 */
+.result-item.reminder {
+    background: rgba(37, 117, 252, 0.05);
+    margin: 0 -5vw;
+    padding: 4vw 5vw;
+    border-radius: 3vw;
+    border-left: 1vw solid #2575fc;
+}
+
+.result-item .reminder {
+    color: #2575fc;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 4.8vw, 1.25rem);
+}
+
+/* ========== 错误提示 ========== */
 .error-message {
     background: #fee;
-    border: 1px solid #fcc;
-    border-radius: 8px;
-    padding: 15px;
-    margin-top: 20px;
+    border: 0.3vw solid #fcc;
+    border-radius: 3vw;
+    padding: 4vw;
+    margin-top: 5vw;
     color: #c00;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 3.8vw, 0.95rem);
     display: none;
+    width: 100%;
 }
 
 .error-message.show {
@@ -214,79 +296,104 @@ header .subtitle {
     to { opacity: 1; }
 }
 
-/* 提示区域 */
+/* ========== 提示区域 ========== */
 .tips {
     background: #e7f3ff;
-    border-radius: 10px;
-    padding: 20px;
-    border: 1px solid #c3d9ff;
+    border-radius: 4vw;
+    padding: 5vw;
+    border: 0.3vw solid #c3d9ff;
+    width: 100%;
 }
 
 .tips p {
-    font-weight: 600;
+    font-weight: 700;
     color: #2c5282;
-    margin-bottom: 10px;
+    margin-bottom: 3vw;
+    font-size: clamp(0.95rem, 4.2vw, 1.05rem);
 }
 
 .tips ul {
     list-style: none;
-    padding-left: 5px;
+    padding-left: 2vw;
 }
 
 .tips li {
-    padding: 6px 0;
-    padding-left: 25px;
+    padding: 2vw 0;
+    padding-left: 8vw;
     position: relative;
     color: #2c5282;
+    font-size: clamp(0.85rem, 3.8vw, 0.95rem);
+    line-height: 1.5;
 }
 
 .tips li:before {
     content: "•";
     position: absolute;
-    left: 10px;
+    left: 3vw;
     color: #2575fc;
     font-weight: bold;
+    font-size: clamp(1rem, 4.5vw, 1.1rem);
 }
 
-/* 页脚 */
+/* ========== 页脚 ========== */
 footer {
     text-align: center;
-    margin-top: 35px;
-    padding: 20px;
+    margin-top: 8vw;
+    padding: 5vw;
     color: #7f8c8d;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 3.5vw, 0.9rem);
+    width: 100%;
+    flex-shrink: 0;
 }
 
-/* 响应式 */
-@media (max-width: 600px) {
-    .container {
-        padding: 15px;
+/* ========== 特殊设备适配 ========== */
+/* iPhone刘海屏安全区域 */
+@supports (padding: max(0px)) {
+    body, header, .calculator-card, footer {
+        padding-left: max(5vw, env(safe-area-inset-left));
+        padding-right: max(5vw, env(safe-area-inset-right));
     }
-    
-    header h1 {
-        font-size: 1.6rem;
+    body {
+        padding-top: max(5vw, env(safe-area-inset-top));
+        padding-bottom: max(5vw, env(safe-area-inset-bottom));
     }
-    
-    .calculator-card {
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 320px) {
+    html {
+        font-size: 14px;
+    }
+    .quick-btn {
+        padding: 2.5vw 3.5vw;
+        font-size: 0.75rem;
+    }
+}
+
+/* 平板和桌面端优化 */
+@media (min-width: 768px) {
+    body {
         padding: 20px;
     }
-    
+    .container {
+        max-width: 450px;
+    }
+    .calculator-card {
+        border-radius: 20px;
+        padding: 30px;
+    }
     .date-input, .number-input {
-        padding: 12px;
-        font-size: 1rem;
+        padding: 15px;
+        border-width: 2px;
+        border-radius: 10px;
+        font-size: 16px;
     }
-    
-    .calculate-btn {
-        padding: 14px;
-    }
-    
-    .quick-btn {
-        padding: 7px 14px;
-        font-size: 0.85rem;
-    }
-    
-    .result-item.highlight {
-        margin: 0 -20px;
+    .quick-btn, .calculate-btn {
         padding: 12px 20px;
+        font-size: 15px;
+    }
+    .result-area, .tips {
+        padding: 20px;
+        border-radius: 15px;
     }
 }
