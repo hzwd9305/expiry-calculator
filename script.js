@@ -82,6 +82,10 @@ function showAlert(type, message) {
     
     // 根据类型设置图标和标题
     switch(type) {
+        case 'expired':
+            alertIcon.textContent = '❌';
+            alertTitle.textContent = '商品已过期';
+            break;
         case 'just':
             alertIcon.textContent = '⚠️';
             alertTitle.textContent = '刚刚超三';
@@ -94,7 +98,7 @@ function showAlert(type, message) {
             alertIcon.textContent = '📅';
             alertTitle.textContent = '日期较大';
             break;
-        case 'expired':
+        case 'tertiary':
             alertIcon.textContent = '❌';
             alertTitle.textContent = '已经超三';
             break;
@@ -145,38 +149,52 @@ function getDaysBetween(date1, date2) {
     }
 }
 
-// 检查生产日期状态
-function checkProductionDateStatus(productionDate, tertiaryDate) {
+// 检查商品状态（按照优先级）
+function checkProductStatus(productionDate, expiryDate, tertiaryDate, currentDate) {
     try {
-        // 1. 验证日期有效性
-        if (!productionDate || !tertiaryDate || 
-            isNaN(productionDate.getTime()) || 
-            isNaN(tertiaryDate.getTime())) {
+        // 1. 验证所有日期有效性
+        if (!productionDate || !expiryDate || !tertiaryDate || !currentDate ||
+            isNaN(productionDate.getTime()) || isNaN(expiryDate.getTime()) || 
+            isNaN(tertiaryDate.getTime()) || isNaN(currentDate.getTime())) {
             return null;
         }
         
-        // 2. 计算天数差
-        const daysDiff = getDaysBetween(productionDate, tertiaryDate);
-        if (daysDiff === null) return null;
+        // 2. 标准化日期（去掉时间部分）
+        const prodDate = new Date(productionDate.getFullYear(), productionDate.getMonth(), productionDate.getDate());
+        const expDate = new Date(expiryDate.getFullYear(), expiryDate.getMonth(), expiryDate.getDate());
+        const tertDate = new Date(tertiaryDate.getFullYear(), tertiaryDate.getMonth(), tertiaryDate.getDate());
+        const curDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         
-        // 3. 判断逻辑
-        if (daysDiff === 0) {
+        // ========== 第一优先级：检查是否过期 ==========
+        if (curDate.getTime() > expDate.getTime()) {
+            return { type: 'expired', message: '商品已过期，不可流入' };
+        }
+        
+        // ========== 第二优先级：检查超三状态 ==========
+        // 计算生产日期与超三日期的天数差（正数表示生产日期比超三日期早多少天）
+        const daysFromTertiary = getDaysBetween(prodDate, tertDate);
+        if (daysFromTertiary === null) return null;
+        
+        // 判断超三状态
+        if (daysFromTertiary === 0) {
             return { type: 'just', message: '刚刚超三，咨询店长是否收货' };
-        } else if (daysDiff > 0 && daysDiff <= 3) {
+        } else if (daysFromTertiary > 0 && daysFromTertiary <= 3) {
             return { type: 'soon', message: '即将超三，咨询店长是否收货' };
-        } else if (daysDiff < 0) {
+        } else if (daysFromTertiary > 3) {
+            return { type: 'tertiary', message: '商品超三，咨询店长是否收货' };
+        } else if (daysFromTertiary < 0) {
             // 生产日期晚于超三日期
-            if (productionDate.getFullYear() === tertiaryDate.getFullYear()) {
+            if (prodDate.getFullYear() === tertDate.getFullYear()) {
                 return { type: 'large', message: '日期较大，咨询店长是否收货' };
             }
-            // 年份不同，不提醒
+            // 年份不同（生产日期年份 > 超三日期年份），不提醒
             return null;
-        } else {
-            // daysDiff > 3
-            return { type: 'expired', message: '商品超三，咨询店长是否收货' };
         }
+        
+        return null;
+        
     } catch (error) {
-        console.error('检查生产日期状态错误:', error);
+        console.error('检查商品状态错误:', error);
         return null;
     }
 }
@@ -257,26 +275,26 @@ function calculate() {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         
-        // 5. 计算超三日期（当前日期 - 保质期÷3）
-        const oneThirdShelfLife = Math.round(shelfLife / 3);
-        const tertiaryDate = new Date(today);
-        tertiaryDate.setDate(today.getDate() - oneThirdShelfLife);
-        
-        // 6. 计算到期日期
+        // 5. 计算到期日期
         const expiryDate = new Date(productionDate);
         expiryDate.setDate(productionDate.getDate() + shelfLife);
         
-        // 7. 计算贴签日期
+        // 6. 计算贴签日期
         const reminderDate = new Date(expiryDate);
         reminderDate.setDate(expiryDate.getDate() - 1);
+        
+        // 7. 计算超三日期（当前日期 - 保质期÷3）
+        const oneThirdShelfLife = Math.round(shelfLife / 3);
+        const tertiaryDate = new Date(today);
+        tertiaryDate.setDate(today.getDate() - oneThirdShelfLife);
         
         // 8. 更新显示
         document.getElementById('expiry-date').textContent = formatDateDisplay(expiryDate);
         document.getElementById('reminder-date').textContent = formatDateDisplay(reminderDate);
         document.getElementById('tertiary-date').textContent = formatDateDisplay(tertiaryDate);
         
-        // 9. 检查生产日期状态并显示弹窗
-        const status = checkProductionDateStatus(productionDate, tertiaryDate);
+        // 9. 检查商品状态并显示弹窗（按照优先级）
+        const status = checkProductStatus(productionDate, expiryDate, tertiaryDate, today);
         if (status) {
             showAlert(status.type, status.message);
         }
@@ -290,11 +308,9 @@ function calculate() {
 // ==================== 页面加载 ====================
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM已加载，开始初始化');
         init();
     });
 } else {
-    console.log('DOM已就绪，立即初始化');
     init();
 }
 
