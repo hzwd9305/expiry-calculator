@@ -1,5 +1,5 @@
 /**
- * 格式化日期：年-月-日
+ * 格式化日期：年-月-日（兼容大月/小月/闰年月）
  * @param {Date} date 日期对象
  * @returns {string} 格式化字符串
  */
@@ -19,7 +19,7 @@ function initCurrentDate() {
 }
 
 /**
- * 快捷设置保质期（仅赋值天数，无换算）
+ * 快捷设置保质期（仅赋值天数）
  * @param {number} days 保质期天数
  */
 function setShelfLife(days) {
@@ -28,13 +28,14 @@ function setShelfLife(days) {
 }
 
 /**
- * 核心计算逻辑（最终版）：
- * 1. 到期日期 = 生产日期 + 保质期（天）
- * 2. 超三日期 = 当前日期 - (保质期天数/30/3) 个月
+ * 核心计算逻辑（最终正确版）：
+ * 1. 超三日期 = 当前日期 - (保质期天数 ÷ 3) 天（向下取整，按天算）
+ * 2. 到期日期 = 生产日期 + 保质期天数
  * 3. 贴签日期 = 到期日期 - 1天
+ * 所有计算通过Date对象实现，自动区分大月/小月/闰年月
  */
 function calculateDates() {
-    // 1. 获取输入（仅天数）
+    // 1. 获取输入（纯天数）
     const productionDate = new Date(document.getElementById('productionDate').value);
     const shelfLifeDays = Number(document.getElementById('shelfLife').value);
     const currentDate = new Date();
@@ -44,15 +45,14 @@ function calculateDates() {
         return;
     }
 
-    // 3. 到期日期：生产日期 + 保质期（天）【核心修正：按天计算】
+    // 3. 超三日期：当前日期 - 保质期天数/3 天（向下取整）【核心修正：全按天】
+    const overThreeDays = Math.floor(shelfLifeDays / 3); // 避免小数天，向下取整
+    const overThreeDate = new Date(currentDate);
+    overThreeDate.setDate(overThreeDate.getDate() - overThreeDays);
+
+    // 4. 到期日期：生产日期 + 保质期天数
     const expiryDate = new Date(productionDate);
     expiryDate.setDate(expiryDate.getDate() + shelfLifeDays);
-
-    // 4. 超三日期：当前日期 - (保质期天数 ÷ 30 ÷ 3) 个月【仅此处转月】
-    const shelfLifeMonths = shelfLifeDays / 30; // 天数转月（1月=30天）
-    const overThreeMonths = shelfLifeMonths / 3; // 超三月份数
-    const overThreeDate = new Date(currentDate);
-    overThreeDate.setMonth(overThreeDate.getMonth() - overThreeMonths);
 
     // 5. 贴签日期：到期日期 - 1天
     const labelDate = new Date(expiryDate);
@@ -70,7 +70,7 @@ function calculateDates() {
 window.onload = function() {
     initCurrentDate();
     calculateDates();
-    // 监听输入变化
+    // 监听输入变化，实时计算
     document.getElementById('productionDate').addEventListener('change', calculateDates);
     document.getElementById('shelfLife').addEventListener('input', calculateDates);
 };
