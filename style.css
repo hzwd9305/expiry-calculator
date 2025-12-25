@@ -3,6 +3,19 @@
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+:root {
+    --primary-color: #6a11cb;
+    --secondary-color: #2575fc;
+    --success-color: #34a853;
+    --danger-color: #dc3545;
+    --warning-color: #ff9800;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 body {
@@ -12,12 +25,15 @@ body {
     padding: 20px;
     color: #333;
     line-height: 1.5;
-    font-size: 1em; /* 电脑默认大小 */
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     max-width: 500px;
     margin: 0 auto;
+    width: 100%;
 }
 
 /* ===== 头部 ===== */
@@ -28,7 +44,7 @@ header {
 }
 
 header h1 {
-    font-size: 1.8em;
+    font-size: 1.8rem;
     margin-bottom: 10px;
     color: #2c3e50;
     font-weight: 700;
@@ -36,7 +52,7 @@ header h1 {
 
 .subtitle {
     color: #666;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     margin-bottom: 15px;
     font-style: italic;
 }
@@ -51,8 +67,8 @@ header h1 {
     background: white;
     border-radius: 10px;
     padding: 15px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    border: 1px solid var(--border-color);
 }
 
 .current-date, .tertiary-date {
@@ -64,32 +80,32 @@ header h1 {
     display: block;
     font-weight: 600;
     color: #555;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     margin-bottom: 5px;
 }
 
 .current-date span:last-child {
     font-weight: 600;
     color: #2c3e50;
-    font-size: 1.05em;
+    font-size: 1.05rem;
 }
 
 /* 超三日期样式（小红字） */
 .tertiary-date .date-label.tertiary {
-    color: #dc3545;
+    color: var(--danger-color);
 }
 
 .tertiary-value {
     display: block;
     font-weight: 700;
-    color: #dc3545 !important;
-    font-size: 1.05em;
+    color: var(--danger-color) !important;
+    font-size: 1.05rem;
 }
 
 .tertiary-hint {
     display: block;
-    font-size: 0.75em;
-    color: #dc3545;
+    font-size: 0.75rem;
+    color: var(--danger-color);
     opacity: 0.8;
     margin-top: 3px;
     font-style: italic;
@@ -102,11 +118,16 @@ header h1 {
     padding: 25px;
     margin-bottom: 25px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.calculator-card:hover {
+    transform: translateY(-2px);
 }
 
 /* 输入卡片 */
 .input-card {
-    border-left: 5px solid #34a853;
+    border-left: 5px solid var(--success-color);
 }
 
 .input-card h3 {
@@ -115,17 +136,17 @@ header h1 {
     gap: 10px;
     margin-bottom: 25px;
     color: #444;
-    font-size: 1.3em;
+    font-size: 1.3rem;
     font-weight: 700;
 }
 
 .input-icon {
-    font-size: 1.3em;
+    font-size: 1.3rem;
 }
 
 /* 结果卡片 */
 .result-card {
-    border-left: 5px solid #6a11cb;
+    border-left: 5px solid var(--primary-color);
 }
 
 .result-card h3 {
@@ -134,12 +155,12 @@ header h1 {
     gap: 10px;
     margin-bottom: 25px;
     color: #444;
-    font-size: 1.3em;
+    font-size: 1.3rem;
     font-weight: 700;
 }
 
 .result-icon {
-    font-size: 1.3em;
+    font-size: 1.3rem;
 }
 
 /* ===== 输入区域 ===== */
@@ -152,32 +173,41 @@ header h1 {
     font-weight: 600;
     color: #444;
     margin-bottom: 10px;
-    font-size: 1.05em;
+    font-size: 1.05rem;
 }
 
 .input-note {
     display: block;
-    font-size: 0.85em;
+    font-size: 0.85rem;
     color: #888;
     margin-top: 5px;
     font-style: italic;
 }
 
-/* 日期输入框 */
+/* 日期输入框 - 手机端优化 */
 .date-input {
     width: 100%;
     padding: 14px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-color);
     border-radius: 10px;
-    font-size: 1.05em;
+    font-size: 1rem;
     transition: all 0.2s;
     font-family: inherit;
+    background: white;
+    min-height: 48px; /* 手机端触摸优化 */
 }
 
 .date-input:focus {
-    border-color: #6a11cb;
+    border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
     outline: none;
+}
+
+/* 手机端日期输入优化 */
+@media (max-width: 768px) {
+    .date-input {
+        font-size: 16px !important; /* 防止iOS自动放大 */
+    }
 }
 
 /* ===== 自定义输入容器 ===== */
@@ -195,12 +225,14 @@ header h1 {
 .number-input {
     width: 100%;
     padding: 14px 50px 14px 14px; /* 右侧留出下拉按钮空间 */
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-color);
     border-radius: 10px;
-    font-size: 1.05em;
+    font-size: 1rem;
     transition: all 0.2s;
     font-family: inherit;
-    -moz-appearance: textfield; /* 隐藏数字输入框的箭头 */
+    background: white;
+    -moz-appearance: textfield;
+    min-height: 48px; /* 手机端触摸优化 */
 }
 
 .number-input::-webkit-outer-spin-button,
@@ -210,20 +242,21 @@ header h1 {
 }
 
 .number-input:focus {
-    border-color: #6a11cb;
+    border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
     outline: none;
 }
 
 .input-with-dropdown .unit {
     position: absolute;
-    right: 40px; /* 在按钮左侧 */
+    right: 40px;
     top: 50%;
     transform: translateY(-50%);
     color: #666;
     font-weight: 500;
-    font-size: 1em;
+    font-size: 1rem;
     pointer-events: none;
+    z-index: 1;
 }
 
 /* 下拉切换按钮 */
@@ -233,8 +266,8 @@ header h1 {
     top: 0;
     height: 100%;
     width: 40px;
-    background: #f8f9fa;
-    border: 2px solid #e0e0e0;
+    background: var(--light-color);
+    border: 2px solid var(--border-color);
     border-left: none;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -243,21 +276,29 @@ header h1 {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
-    border-left: 1px solid #e0e0e0;
+    border-left: 1px solid var(--border-color);
+    z-index: 2;
+    min-height: 48px; /* 手机端触摸优化 */
 }
 
 .dropdown-toggle:hover {
     background: #e9ecef;
 }
 
+.dropdown-toggle.active {
+    background: #e9ecef;
+    border-color: var(--primary-color);
+}
+
 .dropdown-arrow {
-    font-size: 0.8em;
+    font-size: 0.8rem;
     color: #666;
     transition: transform 0.3s;
 }
 
 .dropdown-toggle.active .dropdown-arrow {
     transform: rotate(180deg);
+    color: var(--primary-color);
 }
 
 /* ===== 下拉面板 ===== */
@@ -267,30 +308,37 @@ header h1 {
     left: 0;
     width: 100%;
     background: white;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-color);
     border-top: none;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px var(--shadow-color);
     z-index: 1000;
     margin-top: -2px;
-    display: none;
-    max-height: 400px;
-    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    max-height: 0;
+    overflow: hidden;
 }
 
 .dropdown-panel.active {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 /* 下拉面板头部 */
 .dropdown-header {
     padding: 12px 15px;
-    background: #f8f9fa;
+    background: var(--light-color);
     border-bottom: 1px solid #e9ecef;
     font-weight: 600;
     color: #555;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 /* 快速选择按钮 */
@@ -303,23 +351,25 @@ header h1 {
 }
 
 .quick-btn {
-    padding: 10px 8px;
-    background: #f8f9fa;
-    border: 2px solid #e0e0e0;
+    padding: 12px 8px;
+    background: var(--light-color);
+    border: 2px solid var(--border-color);
     border-radius: 8px;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     font-weight: 500;
     color: #444;
     cursor: pointer;
     transition: all 0.2s;
     text-align: center;
     white-space: nowrap;
+    min-height: 44px; /* 手机端触摸优化 */
 }
 
-.quick-btn:hover {
+.quick-btn:hover,
+.quick-btn:active {
     background: #e9ecef;
-    border-color: #6a11cb;
-    color: #6a11cb;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 /* 滑动选择器 */
@@ -338,13 +388,13 @@ header h1 {
 .slider-header span:first-child {
     font-weight: 600;
     color: #555;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .slider-value-display {
     font-weight: 700;
-    color: #6a11cb;
-    font-size: 1em;
+    color: var(--primary-color);
+    font-size: 1rem;
 }
 
 .shelf-life-slider {
@@ -361,30 +411,30 @@ header h1 {
 .shelf-life-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background: #6a11cb;
+    background: var(--primary-color);
     cursor: pointer;
     border: 3px solid white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px var(--shadow-color);
 }
 
 .shelf-life-slider::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background: #6a11cb;
+    background: var(--primary-color);
     cursor: pointer;
     border: 3px solid white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px var(--shadow-color);
 }
 
 .slider-scale {
     display: flex;
     justify-content: space-between;
     margin-top: 8px;
-    font-size: 0.8em;
+    font-size: 0.8rem;
     color: #777;
 }
 
@@ -402,20 +452,21 @@ header h1 {
 .manual-input {
     flex: 1;
     padding: 12px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-color);
     border-radius: 8px;
-    font-size: 1em;
+    font-size: 1rem;
     font-family: inherit;
+    min-height: 44px; /* 手机端触摸优化 */
 }
 
 .manual-input:focus {
-    border-color: #6a11cb;
+    border-color: var(--primary-color);
     outline: none;
 }
 
 .apply-btn {
     padding: 12px 20px;
-    background: #6a11cb;
+    background: var(--primary-color);
     color: white;
     border: none;
     border-radius: 8px;
@@ -423,20 +474,23 @@ header h1 {
     cursor: pointer;
     transition: background 0.2s;
     white-space: nowrap;
+    min-height: 44px; /* 手机端触摸优化 */
+    min-width: 80px;
 }
 
-.apply-btn:hover {
+.apply-btn:hover,
+.apply-btn:active {
     background: #5a0db3;
 }
 
 .input-hint {
     text-align: center;
     color: #888;
-    font-size: 0.8em;
+    font-size: 0.8rem;
 }
 
 .quick-tips-note {
-    font-size: 0.85em;
+    font-size: 0.85rem;
     color: #888;
     margin-top: 10px;
     font-style: italic;
@@ -455,7 +509,7 @@ header h1 {
     min-width: 150px;
     text-align: center;
     padding: 20px;
-    background: #f8f9fa;
+    background: var(--light-color);
     border-radius: 10px;
     border: 2px solid #e9ecef;
 }
@@ -464,30 +518,30 @@ header h1 {
     display: block;
     font-weight: 600;
     color: #555;
-    font-size: 1em;
+    font-size: 1rem;
     margin-bottom: 10px;
 }
 
 .result-value {
     display: block;
     font-weight: 700;
-    font-size: 1.2em;
+    font-size: 1.2rem;
     color: #2c3e50;
 }
 
 .result-value.highlight {
-    color: #6a11cb;
-    font-size: 1.3em;
+    color: var(--primary-color);
+    font-size: 1.3rem;
 }
 
 .result-value.reminder {
-    color: #2575fc;
-    font-size: 1.3em;
+    color: var(--secondary-color);
+    font-size: 1.3rem;
 }
 
 .result-note {
     display: block;
-    font-size: 0.8em;
+    font-size: 0.8rem;
     color: #888;
     margin-top: 8px;
     font-style: italic;
@@ -499,17 +553,17 @@ header h1 {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 10px;
+    padding: 12px;
     background: #e8f5e9;
     border-radius: 8px;
     border: 1px solid #c8e6c9;
     color: #2e7d32;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     margin-top: 15px;
 }
 
 .leap-icon {
-    font-size: 1.1em;
+    font-size: 1.1rem;
 }
 
 /* ===== 页脚 ===== */
@@ -518,14 +572,14 @@ footer {
     margin-top: 30px;
     padding: 20px;
     color: #7f8c8d;
-    font-size: 0.9em;
+    font-size: 0.9rem;
 }
 
-/* ===== 响应式：手机端缩小7% ===== */
+/* ===== 响应式：手机端 ===== */
 @media (max-width: 768px) {
     body {
-        font-size: 0.93em; /* 手机端缩小7% */
         padding: 15px;
+        font-size: 15px;
     }
     
     .container {
@@ -533,12 +587,12 @@ footer {
     }
     
     header h1 {
-        font-size: 1.6em;
+        font-size: 1.6rem;
         margin-bottom: 8px;
     }
     
     .subtitle {
-        font-size: 0.85em;
+        font-size: 0.85rem;
     }
     
     .calculator-card {
@@ -551,7 +605,7 @@ footer {
         padding: 12px;
         border-radius: 8px;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
     }
     
     .current-date, .tertiary-date {
@@ -560,18 +614,19 @@ footer {
     }
     
     .tertiary-hint {
-        font-size: 0.7em;
+        font-size: 0.75rem;
     }
     
     .input-card h3,
     .result-card h3 {
-        font-size: 1.2em;
+        font-size: 1.2rem;
         margin-bottom: 20px;
     }
     
     .date-input, .number-input {
         padding: 12px;
-        font-size: 1em;
+        font-size: 16px; /* 防止iOS自动放大 */
+        min-height: 44px;
     }
     
     .number-input {
@@ -579,15 +634,23 @@ footer {
     }
     
     .dropdown-toggle {
-        width: 35px;
+        width: 40px;
+        min-height: 44px;
     }
     
     .input-with-dropdown .unit {
-        right: 35px;
+        right: 45px;
     }
     
     .quick-selection-buttons {
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .quick-btn {
+        padding: 10px 6px;
+        font-size: 0.85rem;
+        min-height: 40px;
     }
     
     .result-row {
@@ -601,26 +664,60 @@ footer {
     }
     
     .result-value {
-        font-size: 1.1em;
+        font-size: 1.1rem;
     }
     
     .result-value.highlight,
     .result-value.reminder {
-        font-size: 1.15em;
+        font-size: 1.2rem;
     }
     
     .leap-year-note {
-        font-size: 0.85em;
-        padding: 8px;
+        font-size: 0.85rem;
+        padding: 10px;
     }
     
     footer {
         padding: 15px;
-        font-size: 0.85em;
+        font-size: 0.85rem;
+    }
+    
+    /* 手机端下拉面板优化 */
+    .dropdown-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        width: 90%;
+        max-width: 400px;
+        max-height: 80vh;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        z-index: 9999;
+    }
+    
+    .dropdown-panel.active {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    
+    /* 手机端遮罩层 */
+    .dropdown-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 9998;
+        display: none;
+    }
+    
+    .dropdown-overlay.active {
+        display: block;
     }
 }
 
-/* ===== 电脑端优化（>768px） ===== */
+/* ===== 电脑端优化 ===== */
 @media (min-width: 769px) {
     body {
         display: flex;
