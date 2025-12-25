@@ -1,238 +1,172 @@
-/* 重置样式 */
+/* 极简重置 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    -webkit-text-size-adjust: 100%;
 }
 
-/* 整体容器 */
-.app-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f8f9fa;
-    min-height: 100vh;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+    background: #f8f9fa;
     color: #333;
-}
-
-/* 顶部标题 */
-.header-area {
-    text-align: center;
-    margin-bottom: 25px;
-    padding-top: 10px;
-}
-
-.main-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 5px;
-    letter-spacing: 1px;
-}
-
-.sub-title {
-    font-size: 14px;
-    color: #7f8c8d;
-    font-weight: 400;
-}
-
-/* 日期显示区域 */
-.date-display-container {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #eaeaea;
-}
-
-.date-display-item {
+    line-height: 1.4;
+    padding: 10px;
+    min-height: 100vh;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
+    justify-content: center;
 }
 
-.date-display-item:first-child {
-    border-bottom: 1px solid #f0f0f0;
+/* 主容器 */
+.calculator-container {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
-.date-label {
-    font-size: 16px;
+/* ===== 象限网格 ===== */
+.quadrant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.quadrant-item {
+    padding: 20px 15px;
+    border-right: 1px solid #eaeaea;
+    border-bottom: 1px solid #eaeaea;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+}
+
+/* 移除右边框 */
+.q2, .q4 {
+    border-right: none;
+}
+
+/* 移除底边框 */
+.q3, .q4 {
+    border-bottom: none;
+}
+
+.quadrant-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
     font-weight: 500;
-    color: #555;
 }
 
-.date-value {
-    font-size: 16px;
+.quadrant-value {
+    font-size: 18px;
     font-weight: 600;
     color: #2c3e50;
+    text-align: center;
+    word-break: break-all;
 }
 
-.date-value.tertiary {
+.quadrant-value.tertiary {
     color: #e74c3c;
 }
 
-/* 输入区域 */
-.input-container {
-    background: white;
-    border-radius: 12px;
+/* ===== 输入区域 ===== */
+.input-section {
     padding: 25px 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #eaeaea;
 }
 
-.input-item {
+.input-row {
     margin-bottom: 25px;
 }
 
-.input-item:last-child {
+.input-row:last-child {
     margin-bottom: 0;
 }
 
-.input-label {
+.input-row label {
     display: block;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 15px;
     color: #555;
     margin-bottom: 10px;
+    font-weight: 500;
 }
 
-.input-wrapper {
-    position: relative;
-}
-
-.date-input, .number-input {
+.input-row input[type="date"],
+.input-row input[type="number"] {
     width: 100%;
-    height: 48px;
+    height: 46px;
     padding: 0 15px;
-    border: 1.5px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
     font-family: inherit;
-    background: #fcfcfc;
-    transition: border-color 0.2s;
+    background: white;
 }
 
-.date-input:focus, .number-input:focus {
+.input-row input:focus {
     border-color: #3498db;
     outline: none;
+}
+
+/* 保质期控制区域 */
+.shelf-life-control {
+    width: 100%;
+}
+
+.quick-days {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.quick-days button {
+    height: 36px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     background: white;
-}
-
-.unit-text {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #777;
-    font-size: 16px;
-}
-
-/* 结果区域 */
-.result-container {
-    background: white;
-    border-radius: 12px;
-    padding: 25px 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #eaeaea;
-}
-
-.result-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 0;
-}
-
-.result-item:first-child {
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.result-label {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 13px;
     color: #555;
-}
-
-.result-value {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-/* 快捷按钮区域 */
-.quick-buttons-container {
-    margin-bottom: 25px;
-}
-
-.buttons-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    gap: 12px;
-}
-
-.buttons-row:last-child {
-    margin-bottom: 0;
-}
-
-.quick-button {
-    flex: 1;
-    height: 50px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(145deg, #6c5ce7, #a29bfe);
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 3px 6px rgba(108, 92, 231, 0.2);
     font-family: inherit;
+    transition: all 0.2s;
 }
 
-.quick-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(108, 92, 231, 0.3);
+.quick-days button:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
 }
 
-.quick-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(108, 92, 231, 0.2);
-}
-
-/* 页脚 */
-.footer {
-    text-align: center;
-    padding: 20px 0;
-    border-top: 1px solid #eee;
-}
-
-.copyright {
-    font-size: 14px;
-    color: #95a5a6;
+.quick-days button:active {
+    background: #eaeaea;
 }
 
 /* 响应式调整 */
-@media (max-width: 420px) {
-    .app-container {
-        padding: 15px;
+@media (max-width: 480px) {
+    .quadrant-item {
+        padding: 15px 10px;
+        min-height: 100px;
     }
     
-    .date-display-container,
-    .input-container,
-    .result-container {
+    .quadrant-label {
+        font-size: 13px;
+    }
+    
+    .quadrant-value {
+        font-size: 16px;
+    }
+    
+    .input-section {
         padding: 20px 15px;
     }
     
-    .quick-button {
-        height: 46px;
-        font-size: 15px;
+    .quick-days {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
