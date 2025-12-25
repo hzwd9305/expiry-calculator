@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.95, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=0.93, maximum-scale=1.0, user-scalable=yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="到期计算器">
@@ -14,16 +14,23 @@
     <meta name="description" content="到期日期计算器 - 精准计算到期日期">
     <title>到期计算器</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        * { -webkit-tap-highlight-color: transparent; }
-        body { font-size: 0.95em; }
-    </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>到期日期计算器</h1>
-            <p class="subtitle">当前日期：<span id="current-date-display">--</span></p>
+            <!-- 顶部日期行：当前日期 + 超三日期 -->
+            <div class="top-date-row">
+                <div class="current-date">
+                    <span class="date-label">当前日期：</span>
+                    <span id="current-date-display">--</span>
+                </div>
+                <div class="tertiary-date">
+                    <span class="date-label tertiary">超三日期：</span>
+                    <span id="tertiary-date-display" class="tertiary-value">--</span>
+                    <small class="tertiary-hint">(当前日期 - 保质期÷3)</small>
+                </div>
+            </div>
         </header>
 
         <main>
@@ -48,7 +55,6 @@
                         <span class="unit">天</span>
                     </div>
                     
-                    <!-- 移除了所有快捷按钮 -->
                     <div class="quick-tips-note">
                         💡 直接输入保质期天数，修改后自动计算
                     </div>
@@ -68,12 +74,6 @@
                         <span class="result-label">贴签日期</span>
                         <span id="reminder-date" class="result-value reminder">--</span>
                     </div>
-                </div>
-                
-                <!-- 超三日期放在结果框内，小字体显示 -->
-                <div class="tertiary-info">
-                    <div class="tertiary-label">超三日期 (当前日期 - 保质期÷3)：</div>
-                    <div id="tertiary-date-display" class="tertiary-value">--</div>
                 </div>
             </div>
         </main>
