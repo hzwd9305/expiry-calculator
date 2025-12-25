@@ -19,36 +19,38 @@ function initCurrentDate() {
 }
 
 /**
- * 快捷设置保质期并触发计算
+ * 快捷设置保质期（天数转月数，1月≈30天）
  * @param {number} days 保质期天数
  */
 function setShelfLife(days) {
-    document.getElementById('shelfLife').value = days;
+    // 天数转月数（1月=30天，向下取整）
+    const months = Math.floor(days / 30);
+    document.getElementById('shelfLife').value = months;
     calculateDates();
 }
 
 /**
- * 核心计算逻辑：按规则计算超三/到期/贴签日期，兼容闰年月
+ * 核心计算逻辑：超三日期按月份计算，兼容闰年月
  */
 function calculateDates() {
-    // 1. 获取输入值
+    // 1. 获取输入值（保质期为月数）
     const productionDate = new Date(document.getElementById('productionDate').value);
-    const shelfLifeDays = Number(document.getElementById('shelfLife').value);
+    const shelfLifeMonths = Number(document.getElementById('shelfLife').value);
     const currentDate = new Date();
 
     // 2. 输入校验
-    if (isNaN(productionDate.getTime()) || isNaN(shelfLifeDays) || shelfLifeDays < 1) {
+    if (isNaN(productionDate.getTime()) || isNaN(shelfLifeMonths) || shelfLifeMonths < 1) {
         return;
     }
 
-    // 3. 计算到期日期：生产日期 + 保质期天数
+    // 3. 计算到期日期：生产日期 + 保质期月数
     const expiryDate = new Date(productionDate);
-    expiryDate.setDate(expiryDate.getDate() + shelfLifeDays);
+    expiryDate.setMonth(expiryDate.getMonth() + shelfLifeMonths);
 
-    // 4. 计算超三日期：当前日期 - 保质期天数 × 1/3（向下取整）
-    const overThreeDays = Math.floor(shelfLifeDays / 3);
+    // 4. 计算超三日期：当前日期 - (保质期月数 ÷ 3)
+    const overThreeMonths = shelfLifeMonths / 3;
     const overThreeDate = new Date(currentDate);
-    overThreeDate.setDate(overThreeDate.getDate() - overThreeDays);
+    overThreeDate.setMonth(overThreeDate.getMonth() - overThreeMonths);
 
     // 5. 计算贴签日期：到期日期 - 1天
     const labelDate = new Date(expiryDate);
