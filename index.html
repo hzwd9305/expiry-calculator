@@ -2,177 +2,110 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 全平台视口适配 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.05, maximum-scale=1.1, user-scalable=yes">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-    
-    <!-- PWA 优化 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="到期计算器">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#6a11cb">
-    
-    <!-- 跨浏览器图标兼容 -->
-    <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/color/180/000000/calculator--v1.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://img.icons8.com/color/32/000000/calculator--v1.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://img.icons8.com/color/16/000000/calculator--v1.png">
-    <link rel="shortcut icon" href="https://img.icons8.com/color/96/000000/calculator--v1.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
     <link rel="apple-touch-startup-image" href="https://img.icons8.com/color/512/000000/calculator--v1.png">
-    
-    <!-- Web App Manifest -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- 跨平台SEO优化 -->
-    <meta name="description" content="生产日期保质期计算器 - 精准计算到期日期和贴签日期，支持手机电脑全平台">
-    <meta property="og:title" content="到期计算器 - 全平台适配">
-    <meta property="og:description" content="专业生产日期计算工具，手机电脑通用">
-    <meta property="og:image" content="https://img.icons8.com/color/512/000000/calculator--v1.png">
-    <meta property="og:url" content="https://hzwd9305.github.io/expiry-calculator/">
-    
-    <title>到期计算器 - 手机电脑通用版</title>
+    <meta name="description" content="输入生产日期和保质期天数，精准计算到期、贴签及超三日期">
+    <title>到期计算器</title>
     <link rel="stylesheet" href="style.css">
-    <!-- 全平台基础样式 -->
     <style>
-        /* 禁用文本选择（计算器交互优化） */
-        .calculator-card, .result-area, .calculate-btn, .quick-btn {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-        
-        /* 允许输入框文本选择 */
-        input, textarea {
-            user-select: text;
-            -webkit-user-select: text;
-        }
-        
-        /* 移除所有点击高亮 */
-        * {
-            -webkit-tap-highlight-color: transparent;
-            -moz-tap-highlight-color: transparent;
-        }
-        
-        /* 平滑滚动（全平台） */
-        html {
-            scroll-behavior: smooth;
-        }
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-size: 1.05em; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>到期日期计算器</h1>
-            <p class="subtitle">手机电脑通用版 - 输入 → 计算 → 完成</p>
-            <p class="platform-hint" id="platform-hint"></p>
+            <p class="subtitle">输入 → 计算 → 完成</p>
         </header>
 
         <main>
-            <div class="calculator-card">
-                <!-- 输入区域 -->
+            <!-- 当前日期和超三日期显示区域 -->
+            <div class="current-date-info">
+                <div class="current-date-item">
+                    <span>当前日期：</span>
+                    <span id="current-date-display">--</span>
+                </div>
+                <div class="current-date-item tertiary">
+                    <span>超三日期 (当前 - 保质期÷3)：</span>
+                    <span id="tertiary-date-display">--</span>
+                </div>
+            </div>
+
+            <!-- 计算结果卡片 (顶部) -->
+            <div class="calculator-card result-card-top">
+                <h3><span class="result-icon">📊</span> 计算结果</h3>
+                <div class="result-item">
+                    <span class="result-label">生产日期：</span>
+                    <span id="production-date-display" class="result-value">--</span>
+                </div>
+                <div class="result-item highlight">
+                    <span class="result-label">到期日期：</span>
+                    <span id="expiry-date" class="result-value highlight">--</span>
+                </div>
+                <div class="result-item reminder">
+                    <span class="result-label">贴签日期：</span>
+                    <span id="reminder-date" class="result-value reminder">--</span>
+                </div>
+            </div>
+
+            <!-- 原输入区域卡片 (下移) -->
+            <div class="calculator-card input-card">
                 <div class="input-area">
                     <div class="input-group">
                         <label for="production-date">
-                            <span class="label-icon">📅</span> 1. 生产日期
+                            1. 生产日期
                         </label>
-                        <input type="date" id="production-date" value="" class="date-input" 
-                               title="选择商品生产日期" aria-label="生产日期选择">
-                        <div class="input-hint">默认显示30天前日期</div>
+                        <input type="date" id="production-date" value="" class="date-input">
                     </div>
-                    
+
                     <div class="input-group">
                         <label for="shelf-life">
-                            <span class="label-icon">⏱️</span> 2. 保质期（天数）
+                            2. 保质期（天数）
+                            <span class="current-sum-hint" id="current-sum-hint">(当前: <span id="current-days-sum">0</span>天)</span>
                         </label>
                         <div class="number-input-container">
-                            <input type="number" id="shelf-life" value="365" min="1" max="9999" 
-                                   class="number-input" placeholder="输入保质期天数" 
-                                   inputmode="decimal" title="输入保质期总天数" aria-label="保质期天数输入">
+                            <input type="number" id="shelf-life" value="0" min="0" max="9999"
+                                   class="number-input" placeholder="点击下方按钮累加" inputmode="decimal" readonly>
                             <span class="unit">天</span>
                         </div>
                         <div class="quick-tips">
-                            <span class="tips-title">常用保质期：</span>
-                            <button type="button" class="quick-btn" data-days="30" title="30天保质期">30天</button>
-                            <button type="button" class="quick-btn" data-days="90" title="90天保质期">90天</button>
-                            <button type="button" class="quick-btn" data-days="180" title="半年保质期">半年</button>
-                            <button type="button" class="quick-btn" data-days="365" title="1年保质期">1年</button>
-                            <button type="button" class="quick-btn" data-days="730" title="2年保质期">2年</button>
+                            <span>常用保质期：</span>
+                            <button type="button" class="quick-btn" data-days="15">15天</button>
+                            <button type="button" class="quick-btn" data-days="30">30天</button>
+                            <button type="button" class="quick-btn" data-days="90">90天</button>
+                            <button type="button" class="quick-btn" data-days="180">半年</button>
+                            <button type="button" class="quick-btn" data-days="365">1年</button>
+                            <button type="button" class="quick-btn" data-days="730">2年</button>
+                            <button type="button" id="clear-days-btn" class="quick-btn clear" title="清零">清除</button>
+                        </div>
+                        <div class="quick-tips-note">
+                            💡 提示：点击按钮累加天数，再次点击可继续增加。
                         </div>
                     </div>
                 </div>
 
-                <!-- 计算按钮 -->
-                <button id="calculate-btn" class="calculate-btn" aria-label="计算到期日期">
-                    <span class="btn-icon">🧮</span> 计算到期日期
+                <button id="calculate-btn" class="calculate-btn">
+                    🧮 计算日期
                 </button>
 
-                <!-- 结果区域 -->
-                <div class="result-area">
-                    <h3><span class="result-icon">📊</span> 计算结果</h3>
-                    <div class="result-item">
-                        <span class="result-label">生产日期：</span>
-                        <span id="production-date-display" class="result-value">--</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">保质期：</span>
-                        <span id="shelf-life-display" class="result-value">--</span>
-                    </div>
-                    <div class="result-item highlight">
-                        <span class="result-label">到期日期：</span>
-                        <span id="expiry-date" class="result-value highlight">--</span>
-                    </div>
-                    <!-- 贴签日期行 -->
-                    <div class="result-item reminder">
-                        <span class="result-label">贴签日期 (到期日前1天)：</span>
-                        <span id="reminder-date" class="result-value reminder">--</span>
-                    </div>
-                </div>
-                
-                <!-- 操作提示（PC端显示） -->
-                <div class="pc-hints" id="pc-hints">
-                    <p>💡 <strong>电脑使用提示：</strong></p>
-                    <ul>
-                        <li>按 <kbd>Enter</kbd> 键快速计算</li>
-                        <li>使用 <kbd>↑</kbd> <kbd>↓</kbd> 箭头调整保质期天数</li>
-                        <li>数字键 <kbd>1</kbd>-<kbd>5</kbd> 对应快捷按钮</li>
-                    </ul>
-                </div>
-                
-                <!-- 错误提示区域 -->
-                <div id="error-message" class="error-message" role="alert" aria-live="assertive"></div>
-            </div>
-
-            <!-- 使用提示 -->
-            <div class="tips">
-                <p><span class="tip-icon">💡</span> 使用说明：</p>
-                <ul>
-                    <li><strong>手机用户：</strong>可添加到桌面，像APP一样使用</li>
-                    <li><strong>电脑用户：</strong>支持键盘快捷键操作</li>
-                    <li><strong>通用功能：</strong>自动计算闰年，日期绝对无乱码</li>
-                    <li><strong>贴签日期：</strong>为到期日的前一天，用于提前贴标</li>
-                </ul>
+                <div id="error-message" class="error-message" style="display: none;"></div>
             </div>
         </main>
 
         <footer>
-            <div class="footer-content">
-                <p>© 2023-<span id="current-year"></span> 到期计算器 - 全平台适配版</p>
-                <p class="footer-links">
-                    访问地址：<code>https://hzwd9305.github.io/expiry-calculator/</code>
-                    <span class="separator">|</span>
-                    <button id="copy-url" class="link-btn" title="复制网址">📋 复制网址</button>
-                    <span class="separator">|</span>
-                    <button id="print-page" class="link-btn" title="打印页面">🖨️ 打印</button>
-                </p>
-                <p class="browser-support">支持：Chrome, Edge, Firefox, Safari, 微信浏览器等</p>
-            </div>
+            <p>© 到期计算器 | <span id="current-year"></span></p>
         </footer>
     </div>
-
-    <!-- 复制成功提示 -->
-    <div id="copy-success" class="copy-success" aria-live="polite">✅ 网址已复制到剪贴板</div>
-    
     <script src="script.js"></script>
 </body>
 </html>
