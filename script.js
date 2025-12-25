@@ -86,21 +86,17 @@ function showAlert(type, message) {
             alertIcon.textContent = '❌';
             alertTitle.textContent = '商品已过期';
             break;
-        case 'just':
+        case 'tertiary_just':
             alertIcon.textContent = '⚠️';
             alertTitle.textContent = '刚刚超三';
             break;
-        case 'soon':
-            alertIcon.textContent = '⚠️';
-            alertTitle.textContent = '即将超三';
+        case 'tertiary_expired':
+            alertIcon.textContent = '❌';
+            alertTitle.textContent = '已经超三';
             break;
         case 'large':
             alertIcon.textContent = '📅';
             alertTitle.textContent = '日期较大';
-            break;
-        case 'tertiary':
-            alertIcon.textContent = '❌';
-            alertTitle.textContent = '已经超三';
             break;
     }
     
@@ -129,28 +125,54 @@ function formatDateDisplay(date) {
     }
 }
 
-// 安全获取天数差（考虑时区）
-function getDaysBetween(date1, date2) {
+// 计算两个日期之间的自然月差（精确到小数）
+function getMonthDifference(date1, date2) {
     try {
         if (!date1 || !date2 || isNaN(date1.getTime()) || isNaN(date2.getTime())) {
             return null;
         }
         
-        // 标准化日期（去掉时间部分）
-        const d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
-        const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
+        // 确保date1是较早的日期
+        let earlyDate = date1 < date2 ? date1 : date2;
+        let lateDate = date1 < date2 ? date2 : date1;
         
-        // 计算天数差
-        const timeDiff = d2.getTime() - d1.getTime();
-        return Math.round(timeDiff / (1000 * 60 * 60 * 24));
+        // 计算年份和月份差
+        let yearDiff = lateDate.getFullYear() - earlyDate.getFullYear();
+        let monthDiff = lateDate.getMonth() - earlyDate.getMonth();
+        
+        // 计算总月数
+        let totalMonths = yearDiff * 12 + monthDiff;
+        
+        // 调整天数差
+        let dayDiff = lateDate.getDate() - earlyDate.getDate();
+        let dayFraction = dayDiff / 30; // 近似转换为月份小数
+        
+        // 如果晚日期的日期小于早日期的日期，需要借月
+        if (dayDiff < 0) {
+            totalMonths--;
+            // 计算上个月的天数
+            let lastMonth = new Date(lateDate);
+            lastMonth.setMonth(lastMonth.getMonth() - 1);
+            let daysInLastMonth = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0).getDate();
+            dayFraction = (daysInLastMonth + dayDiff) / 30;
+        }
+        
+        let result = totalMonths + dayFraction;
+        
+        // 如果是date1比date2晚，返回负数
+        if (date1 > date2) {
+            result = -result;
+        }
+        
+        return parseFloat(result.toFixed(2));
     } catch (error) {
-        console.error('计算天数差错误:', error);
+        console.error('计算月份差错误:', error);
         return null;
     }
 }
 
 // 检查商品状态（按照优先级）
-function checkProductStatus(productionDate, expiryDate, tertiaryDate, currentDate) {
+function checkProductStatus(productionDate, expiryDate, tertiaryDate, currentDate, shelfLife) {
     try {
         // 1. 验证所有日期有效性
         if (!productionDate || !expiryDate || !tertiaryDate || !currentDate ||
@@ -170,25 +192,37 @@ function checkProductStatus(productionDate, expiryDate, tertiaryDate, currentDat
             return { type: 'expired', message: '商品已过期，不可流入' };
         }
         
-        // ========== 第二优先级：检查超三状态 ==========
-        // 计算生产日期与超三日期的天数差（正数表示生产日期比超三日期早多少天）
-        const daysFromTertiary = getDaysBetween(prodDate, tertDate);
-        if (daysFromTertiary === null) return null;
+        // ========== 第二优先级：超三检查 ==========
+        // 计算当前日期与超三日期的月份差
+        const monthDiff = getMonthDifference(curDate, tertDate);
+        if (monthDiff === null) return null;
         
-        // 判断超三状态
-        if (daysFromTertiary === 0) {
-            return { type: 'just', message: '刚刚超三，咨询店长是否收货' };
-        } else if (daysFromTertiary > 0 && daysFromTertiary <= 3) {
-            return { type: 'soon', message: '即将超三，咨询店长是否收货' };
-        } else if (daysFromTertiary > 3) {
-            return { type: 'tertiary', message: '商品超三，咨询店长是否收货' };
-        } else if (daysFromTertiary < 0) {
-            // 生产日期晚于超三日期
-            if (prodDate.getFullYear() === tertDate.getFullYear()) {
+        // 计算比较值（保质期÷3，转换为月）
+        const compareValue = shelfLife / 3 / 30; // 近似转换为月
+        
+        console.log('超三检查:', {
+            当前日期: formatDateDisplay(curDate),
+            超三日期: formatDateDisplay(tertDate),
+            月份差: monthDiff,
+            比较值: compareValue,
+            保质期: shelfLife
+        });
+        
+        // 判断超三状态（注意：monthDiff是当前日期-超三日期，应该是正数）
+        if (Math.abs(monthDiff) > compareValue) {
+            return { type: 'tertiary_expired', message: '商品超三，咨询店长是否收货' };
+        } else if (Math.abs(Math.abs(monthDiff) - compareValue) < 0.1) { // 允许微小误差
+            return { type: 'tertiary_just', message: '刚刚超三，咨询店长是否收货' };
+        } else {
+            // 未超三，继续判断其他状态
+            // ========== 第三优先级：日期较大检查 ==========
+            // 计算生产日期与超三日期的天数差
+            const timeDiff = prodDate.getTime() - tertDate.getTime();
+            const daysDiff = Math.round(timeDiff / (1000 * 60 * 60 * 24));
+            
+            if (daysDiff > 0 && prodDate.getFullYear() === tertDate.getFullYear()) {
                 return { type: 'large', message: '日期较大，咨询店长是否收货' };
             }
-            // 年份不同（生产日期年份 > 超三日期年份），不提醒
-            return null;
         }
         
         return null;
@@ -294,9 +328,12 @@ function calculate() {
         document.getElementById('tertiary-date').textContent = formatDateDisplay(tertiaryDate);
         
         // 9. 检查商品状态并显示弹窗（按照优先级）
-        const status = checkProductStatus(productionDate, expiryDate, tertiaryDate, today);
+        const status = checkProductStatus(productionDate, expiryDate, tertiaryDate, today, shelfLife);
         if (status) {
+            console.log('显示弹窗:', status);
             showAlert(status.type, status.message);
+        } else {
+            console.log('状态正常，不显示弹窗');
         }
         
     } catch (error) {
