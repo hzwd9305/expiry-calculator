@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.93, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="到期计算器">
@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
     <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/000000/calculator--v1.png">
     <link rel="manifest" href="manifest.json">
-    <meta name="description" content="到期日期计算器 - 精准计算到期日期">
+    <meta name="description" content="到期日期计算器 - 精准计算到期日期，支持闰年月计算">
     <title>到期计算器</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -19,6 +19,8 @@
     <div class="container">
         <header>
             <h1>到期日期计算器</h1>
+            <p class="subtitle">支持闰年月精确计算</p>
+            
             <!-- 顶部日期行：当前日期 + 超三日期 -->
             <div class="top-date-row">
                 <div class="current-date">
@@ -43,6 +45,7 @@
                         生产日期
                     </label>
                     <input type="date" id="production-date" value="" class="date-input">
+                    <small class="input-note">选择或输入生产日期</small>
                 </div>
 
                 <div class="input-group">
@@ -50,13 +53,13 @@
                         保质期（天数）
                     </label>
                     
-                    <!-- 新：带下拉选择的自定义输入容器 -->
+                    <!-- 带下拉选择的自定义输入容器 -->
                     <div class="custom-input-container">
                         <div class="input-with-dropdown">
                             <input type="number" id="shelf-life" value="365" min="1" max="9999"
                                    class="number-input" placeholder="输入保质期天数" inputmode="decimal">
                             <span class="unit">天</span>
-                            <button type="button" class="dropdown-toggle" id="shelf-life-dropdown-toggle">
+                            <button type="button" class="dropdown-toggle" id="shelf-life-dropdown-toggle" aria-label="展开选项">
                                 <span class="dropdown-arrow">▼</span>
                             </button>
                         </div>
@@ -120,17 +123,25 @@
                     <div class="result-item">
                         <span class="result-label">到期日期</span>
                         <span id="expiry-date" class="result-value highlight">--</span>
+                        <small class="result-note">(生产日期 + 保质期)</small>
                     </div>
                     <div class="result-item">
                         <span class="result-label">贴签日期</span>
                         <span id="reminder-date" class="result-value reminder">--</span>
+                        <small class="result-note">(到期日期 - 1天)</small>
                     </div>
+                </div>
+                
+                <!-- 闰年提示 -->
+                <div class="leap-year-note" id="leap-year-note">
+                    <span class="leap-icon">🌙</span>
+                    <span>计算已考虑闰年月因素</span>
                 </div>
             </div>
         </main>
 
         <footer>
-            <p>© 到期计算器 | <span id="current-year"></span></p>
+            <p>© 到期计算器 | <span id="current-year"></span> | 支持闰年月精确计算</p>
         </footer>
     </div>
     <script src="script.js"></script>
