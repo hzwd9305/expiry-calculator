@@ -13,9 +13,88 @@
     <meta name="description" content="到期日期计算器 - 精准计算到期日期">
     <title>到期计算器</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 弹窗样式 */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            display: none;
+        }
+        
+        .alert-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 320px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .alert-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .alert-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .alert-message {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .alert-btn {
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        
+        .alert-btn:hover {
+            background: #5a0db3;
+        }
+        
+        /* 不同状态的弹窗颜色 */
+        .alert-box.just .alert-icon { color: #ff9800; }
+        .alert-box.soon .alert-icon { color: #ff9800; }
+        .alert-box.large .alert-icon { color: #2196f3; }
+        .alert-box.expired .alert-icon { color: #dc3545; }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- 弹窗 -->
+        <div id="alert-overlay" class="alert-overlay">
+            <div id="alert-box" class="alert-box">
+                <div id="alert-icon" class="alert-icon">⚠️</div>
+                <div id="alert-title" class="alert-title">提示</div>
+                <div id="alert-message" class="alert-message"></div>
+                <button id="alert-btn" class="alert-btn">我知道了</button>
+            </div>
+        </div>
+
         <!-- 顶部标题 -->
         <header>
             <h1>到期计算器</h1>
