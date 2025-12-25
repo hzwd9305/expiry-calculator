@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=0.5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="到期计算器">
@@ -30,7 +30,7 @@
                 <div class="tertiary-date">
                     <span class="date-label tertiary">超三日期：</span>
                     <span id="tertiary-date-display" class="tertiary-value">--</span>
-                    <small class="tertiary-hint">(当前日期 - 保质期÷3)</small>
+                    <small class="tertiary-hint">当前日期 - (保质期 ÷ 3)</small>
                 </div>
             </div>
         </header>
@@ -44,7 +44,7 @@
                     <label for="production-date">
                         生产日期
                     </label>
-                    <input type="date" id="production-date" value="" class="date-input">
+                    <input type="date" id="production-date" class="date-input">
                     <small class="input-note">选择或输入生产日期</small>
                 </div>
 
@@ -59,7 +59,7 @@
                             <input type="number" id="shelf-life" value="365" min="1" max="9999"
                                    class="number-input" placeholder="输入保质期天数" inputmode="decimal">
                             <span class="unit">天</span>
-                            <button type="button" class="dropdown-toggle" id="shelf-life-dropdown-toggle" aria-label="展开选项">
+                            <button type="button" class="dropdown-toggle" id="shelf-life-dropdown-toggle">
                                 <span class="dropdown-arrow">▼</span>
                             </button>
                         </div>
@@ -99,7 +99,7 @@
                             <div class="manual-input-section">
                                 <div class="input-with-buttons">
                                     <input type="number" id="manual-input" class="manual-input" 
-                                           placeholder="手动输入天数" min="1" max="9999">
+                                           placeholder="手动输入天数" min="1" max="9999" value="365">
                                     <button type="button" class="apply-btn" id="apply-manual-input">应用</button>
                                 </div>
                                 <div class="input-hint">
@@ -123,12 +123,12 @@
                     <div class="result-item">
                         <span class="result-label">到期日期</span>
                         <span id="expiry-date" class="result-value highlight">--</span>
-                        <small class="result-note">(生产日期 + 保质期)</small>
+                        <small class="result-note">生产日期 + 保质期</small>
                     </div>
                     <div class="result-item">
                         <span class="result-label">贴签日期</span>
                         <span id="reminder-date" class="result-value reminder">--</span>
-                        <small class="result-note">(到期日期 - 1天)</small>
+                        <small class="result-note">到期日期 - 1天</small>
                     </div>
                 </div>
                 
