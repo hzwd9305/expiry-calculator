@@ -1,22 +1,21 @@
+// script.js - 到期计算器逻辑文件
+
 // ==================== 初始化 ====================
 document.addEventListener('DOMContentLoaded', function() {
     initializeCalculator();
 });
 
 function initializeCalculator() {
-    // 设置当前日期
+    // 只更新当前日期，生产日期保持空白
     updateCurrentDate();
     
-    // 设置默认值
-    const today = new Date();
-    const defaultProductionDate = new Date(today);
-    document.getElementById('production-date').value = formatDateForInput(defaultProductionDate);
+    // 保质期默认15天
     document.getElementById('shelf-life').value = 15;
     
     // 绑定事件
     setupEventListeners();
     
-    // 初始计算
+    // 初始计算（只会计算超三日期）
     calculateAllDates();
 }
 
@@ -36,7 +35,6 @@ function formatDateForDisplay(date) {
     return `${year}-${month}-${day}`;
 }
 
-// 更新当前日期显示
 function updateCurrentDate() {
     const today = new Date();
     document.getElementById('current-date').textContent = formatDateForDisplay(today);
@@ -44,10 +42,10 @@ function updateCurrentDate() {
 
 // ==================== 事件绑定 ====================
 function setupEventListeners() {
-    // 生产日期变化
+    // 生产日期变化时计算
     document.getElementById('production-date').addEventListener('change', calculateAllDates);
     
-    // 保质期输入
+    // 保质期输入时实时计算（防抖动）
     let timer;
     document.getElementById('shelf-life').addEventListener('input', function() {
         clearTimeout(timer);
@@ -69,7 +67,6 @@ function setupEventListeners() {
 // ==================== 核心计算 ====================
 function calculateAllDates() {
     try {
-        // 获取输入值
         const productionDateStr = document.getElementById('production-date').value;
         const shelfLifeInput = document.getElementById('shelf-life').value;
         
@@ -86,7 +83,7 @@ function calculateAllDates() {
         tertiaryDate.setDate(today.getDate() - Math.floor(shelfLife / 3));
         document.getElementById('tertiary-date').textContent = formatDateForDisplay(tertiaryDate);
         
-        // 验证生产日期
+        // 如果生产日期为空，只显示超三日期
         if (!productionDateStr) {
             document.getElementById('expiry-date').textContent = '--';
             document.getElementById('reminder-date').textContent = '--';
